@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>texturelib — minimal browser example</title>
+<!-- Serve the repo root (npx serve . / python3 -m http.server) and open /examples/browser.html -->
+<style>body{font:14px system-ui;margin:16px;background:#eee} canvas{width:512px;max-width:100%;background:#fff}</style>
+<select id="pick"></select>
+<canvas id="c" width="512" height="512"></canvas>
+<script type="module">
+  import { render, listPatterns } from '../src/index.js';
+  const pick = document.getElementById('pick'), ctx = document.getElementById('c').getContext('2d');
+  for (const p of listPatterns()) pick.add(new Option(`${p.category} / ${p.name}`, p.id));
+  const draw = () => {
+    const tile = render(pick.value, { width: 256, supersample: 2 });       // seamless 256² tile
+    const bmp = new OffscreenCanvas(256, 256);
+    bmp.getContext('2d').putImageData(new ImageData(tile.data, 256, 256), 0, 0);
+    ctx.fillStyle = ctx.createPattern(bmp, 'repeat');                          // tile it 2×2
+    ctx.fillRect(0, 0, 512, 512);
+  };
+  pick.onchange = draw; pick.value = 'houndstooth'; draw();
+</script>

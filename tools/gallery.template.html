@@ -1,0 +1,314 @@
+<title>texturelib Swatch Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: mill sample book — swatch index rail on the left, one large live swatch + its spec card on the right. */
+:root {
+  --bg: #eef0f3; --panel: #ffffff; --ink: #161a22; --muted: #5b6372; --line: #d5d9e1;
+  --indigo: #23408e; --indigo-soft: #e3e8f6; --chip: #f4f5f8; --ok: #1f7a4d;
+  --display: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12151b; --panel: #1a1e26; --ink: #e8ebf1; --muted: #9aa3b4; --line: #2b313d;
+  --indigo: #8ea8ef; --indigo-soft: #222c46; --chip: #222733; --ok: #5cc98f; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12151b; --panel: #1a1e26; --ink: #e8ebf1; --muted: #9aa3b4; --line: #2b313d;
+  --indigo: #8ea8ef; --indigo-soft: #222c46; --chip: #222733; --ok: #5cc98f; color-scheme: dark }
+* { box-sizing: border-box }
+html, body { height: 100% }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--display); padding-inline: 16px; padding-block: 16px }
+.app { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 16px; max-width: 1400px; margin: 0 auto; min-height: 100% }
+header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px }
+header.top h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; margin: 0 }
+header.top p { margin: 0; color: var(--muted); max-width: 70ch }
+.rail { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; min-height: 0; max-height: calc(100vh - 110px); position: sticky; top: env(safe-area-inset-top, 0px) }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px; border-bottom: 1px solid var(--line) }
+.tabs button { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .05em; border: 1px solid var(--line); background: var(--chip); color: var(--muted); padding: 5px 8px; border-radius: 6px; cursor: pointer }
+.tabs button[aria-pressed="true"] { background: var(--indigo); border-color: var(--indigo); color: var(--panel) }
+.list { overflow-y: auto; padding: 6px; display: grid; gap: 2px }
+.item { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: center; padding: 6px; border-radius: 7px; border: 1px solid transparent; background: none; color: inherit; text-align: left; cursor: pointer; font: inherit }
+.item:hover { background: var(--chip) }
+.item[aria-current="true"] { background: var(--indigo-soft); border-color: var(--indigo) }
+.item canvas { width: 44px; height: 44px; border-radius: 5px; background: var(--chip); display: block }
+.item b { display: block; font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.item span { font: 12px var(--mono); color: var(--muted) }
+main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; min-width: 0 }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 12px; min-width: 0 }
+.stage-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; justify-content: space-between }
+.stage-head h2 { margin: 0; font-size: 22px; font-weight: 700; text-wrap: balance }
+.stage-head code { font: 13px var(--mono); color: var(--indigo) }
+.desc { margin: 0; color: var(--muted); max-width: 70ch }
+.view { position: relative; width: 100%; aspect-ratio: 1; max-width: 100%; border-radius: 6px; overflow: hidden; background: var(--chip) }
+.view canvas { width: 100%; height: 100%; display: block; image-rendering: auto }
+.busy { position: absolute; right: 10px; bottom: 10px; font: 12px var(--mono); background: var(--panel); color: var(--muted); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line) }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden }
+.seg button { font: 500 12px var(--mono); border: 0; background: var(--panel); color: var(--muted); padding: 6px 10px; cursor: pointer }
+.seg button + button { border-left: 1px solid var(--line) }
+.seg button[aria-pressed="true"] { background: var(--indigo-soft); color: var(--indigo) }
+.lbl { font: 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted) }
+.spec { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 14px; min-width: 0 }
+.spec h3 { margin: 0; font-size: 13px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .07em; color: var(--muted) }
+.field { display: grid; gap: 4px }
+.field label { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 500 }
+.field label output { font: 12px var(--mono); color: var(--indigo); font-variant-numeric: tabular-nums }
+.field input[type=range] { width: 100%; accent-color: var(--indigo) }
+.field select, .field input[type=text], .field textarea { width: 100%; font: 13px var(--mono); padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--chip); color: var(--ink) }
+.field textarea { min-height: 64px; resize: vertical }
+.swatches { display: flex; flex-wrap: wrap; gap: 6px }
+.swatches input[type=color] { width: 34px; height: 28px; padding: 0; border: 1px solid var(--line); border-radius: 5px; background: none; cursor: pointer }
+.check { display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 500 }
+.btn { font: 600 13px var(--display); border: 1px solid var(--indigo); background: var(--indigo); color: var(--panel); padding: 8px 12px; border-radius: 7px; cursor: pointer }
+.btn.ghost { background: transparent; color: var(--indigo) }
+.btn:focus-visible, .item:focus-visible, .seg button:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px }
+pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-x: auto; white-space: pre; color: var(--ink) }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+.note { font-size: 12px; color: var(--muted) }
+.toast { color: var(--ok); font: 12px var(--mono) }
+@media (max-width: 1100px) { main { grid-template-columns: minmax(0, 1fr) } }
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr) }
+  .rail { position: static; max-height: 300px }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="app">
+  <header class="top">
+    <h1>texturelib Swatch Book</h1>
+    <p>Every swatch here is generated live in your browser by the same code Claude Code will read. All tiles are seamless and identical for the same seed and settings.</p>
+  </header>
+
+  <aside class="rail" aria-label="Pattern index">
+    <div class="tabs" id="tabs" role="toolbar" aria-label="Category"></div>
+    <div class="list" id="list"></div>
+  </aside>
+
+  <main>
+    <section class="stage" aria-label="Preview">
+      <div class="stage-head">
+        <h2 id="pname">—</h2>
+        <code id="pid"></code>
+      </div>
+      <p class="desc" id="pdesc"></p>
+      <div class="view">
+        <canvas id="view" width="768" height="768"></canvas>
+        <div class="busy" id="busy" hidden>rendering…</div>
+      </div>
+      <div class="toolbar">
+        <span class="lbl">Tiling</span>
+        <div class="seg" id="tiling">
+          <button data-v="1">1×1</button><button data-v="2" aria-pressed="true">2×2</button><button data-v="3">3×3</button>
+        </div>
+        <span class="lbl">Map</span>
+        <div class="seg" id="mapmode">
+          <button data-v="color" aria-pressed="true">colour</button><button data-v="height">height</button><button data-v="normal">normal</button>
+        </div>
+        <span class="lbl">Tile</span>
+        <div class="seg" id="tilesize">
+          <button data-v="256">256</button><button data-v="384" aria-pressed="true">384</button><button data-v="512">512</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="spec" aria-label="Parameters">
+      <div class="row" style="justify-content:space-between">
+        <h3>Parameters</h3>
+        <div class="row">
+          <button class="btn ghost" id="shuffle" type="button">New seed</button>
+          <button class="btn ghost" id="reset" type="button">Defaults</button>
+        </div>
+      </div>
+      <form id="params" class="spec" style="padding:0;border:0" onsubmit="return false"></form>
+      <h3>Use it in your app</h3>
+      <pre class="code" id="code"></pre>
+      <div class="row"><button class="btn" id="copy" type="button">Copy code</button><span class="toast" id="toast" aria-live="polite"></span></div>
+      <p class="note">Paste into Claude Code with the texturelib folder in your project: <code>render()</code> returns RGBA pixels you can draw to a canvas or upload as a WebGL texture.</p>
+    </section>
+  </main>
+</div>
+
+<script id="tlsrc">/*__TL__*/</script>
+<script>
+(() => {
+  const SRC = document.getElementById('tlsrc').textContent;
+  const all = TL.listPatterns();
+  const CATS = TL.CATEGORIES;
+  const LABEL = { woven: 'Woven', knit: 'Knit', textile: 'Textile', geometric: 'Geometric', organic: 'Organic' };
+
+  // Rendering happens in a Web Worker built from the same bundle, so the page stays responsive.
+  const worker = new Worker(URL.createObjectURL(new Blob([SRC + `
+    self.onmessage = (e) => {
+      const { job, id, size, params, output, ss } = e.data;
+      try {
+        const img = TL.render(id, { width: size, params, output, supersample: ss, normalStrength: 6 });
+        self.postMessage({ job, ok: true, w: img.width, h: img.height, data: img.data }, [img.data.buffer]);
+      } catch (err) { self.postMessage({ job, ok: false, error: String(err) }); }
+    };`], { type: 'text/javascript' })));
+  let jobSeq = 0; const pending = new Map();
+  worker.onmessage = (e) => { const cb = pending.get(e.data.job); pending.delete(e.data.job); cb && cb(e.data); };
+  const renderAsync = (id, size, params, output = 'color', ss = 1) => new Promise((res) => {
+    const job = ++jobSeq; pending.set(job, res); worker.postMessage({ job, id, size, params, output, ss });
+  });
+
+  const state = { cat: 'woven', id: 'houndstooth', params: {}, tiling: 2, output: 'color', size: 384 };
+  try { const saved = JSON.parse(localStorage.getItem('tl-state') || 'null'); if (saved && all.some((p) => p.id === saved.id)) Object.assign(state, saved, { params: saved.params || {} }); } catch {}
+  const save = () => { try { localStorage.setItem('tl-state', JSON.stringify(state)); } catch {} };
+
+  const $ = (id) => document.getElementById(id);
+  const tabs = $('tabs'), list = $('list'), form = $('params');
+
+  // --- category tabs + index with live thumbnails ---
+  const thumbs = new Map();
+  CATS.forEach((c) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = `${LABEL[c]} ${all.filter((p) => p.category === c).length}`;
+    b.setAttribute('aria-pressed', String(c === state.cat));
+    b.onclick = () => { state.cat = c; [...tabs.children].forEach((x) => x.setAttribute('aria-pressed', String(x === b))); buildList(); save(); };
+    tabs.appendChild(b);
+  });
+  function buildList() {
+    list.innerHTML = '';
+    for (const p of all.filter((x) => x.category === state.cat)) {
+      const it = document.createElement('button');
+      it.type = 'button'; it.className = 'item'; it.setAttribute('aria-current', String(p.id === state.id));
+      const cv = document.createElement('canvas'); cv.width = cv.height = 88;
+      const t = document.createElement('div');
+      t.innerHTML = `<b></b><span></span>`; t.querySelector('b').textContent = p.name; t.querySelector('span').textContent = p.id;
+      it.append(cv, t);
+      it.onclick = () => select(p.id);
+      list.appendChild(it);
+      paintThumb(p.id, cv);
+    }
+  }
+  async function paintThumb(id, cv) {
+    let img = thumbs.get(id);
+    if (!img) {
+      const p = id === 'reaction-diffusion' ? { grid: 96, iterations: 2500 } : {};
+      const r = await renderAsync(id, 88, p, 'color', 1);
+      if (!r.ok) return;
+      img = new ImageData(new Uint8ClampedArray(r.data), r.w, r.h); thumbs.set(id, img);
+    }
+    cv.getContext('2d').putImageData(img, 0, 0);
+  }
+
+  // --- parameter form generated from the schema ---
+  const meta = () => all.find((p) => p.id === state.id);
+  const defaultsOf = (m) => Object.fromEntries(Object.entries(m.params).map(([k, s]) => [k, Array.isArray(s.default) ? s.default.slice() : s.default]));
+  function buildForm() {
+    const m = meta(); form.innerHTML = '';
+    const vals = { ...defaultsOf(m), ...state.params };
+    for (const [k, s] of Object.entries(m.params)) {
+      const f = document.createElement('div'); f.className = 'field';
+      const id = `p-${m.id}-${k}`;
+      const label = s.label || k;
+      if (s.type === 'int' || s.type === 'float') {
+        const step = s.type === 'int' ? 1 : +((s.max - s.min) / 200).toPrecision(2);
+        f.innerHTML = `<label for="${id}"><span></span><output></output></label><input type="range" id="${id}" min="${s.min}" max="${s.max}" step="${step}">`;
+        const inp = f.querySelector('input'), out = f.querySelector('output');
+        inp.value = vals[k]; out.textContent = vals[k];
+        inp.oninput = () => { const v = s.type === 'int' ? Math.round(+inp.value) : +inp.value; out.textContent = s.type === 'int' ? v : v.toFixed(3).replace(/0+$/, '').replace(/\.$/, ''); set(k, v); };
+      } else if (s.type === 'enum') {
+        f.innerHTML = `<label for="${id}"><span></span></label><select id="${id}"></select>`;
+        const sel = f.querySelector('select');
+        s.options.forEach((o) => { const op = document.createElement('option'); op.value = String(o); op.textContent = String(o); sel.appendChild(op); });
+        sel.value = String(vals[k]); sel.onchange = () => set(k, sel.value);
+      } else if (s.type === 'bool') {
+        f.innerHTML = `<label class="check" for="${id}"><input type="checkbox" id="${id}"><span></span></label>`;
+        const cb = f.querySelector('input'); cb.checked = !!vals[k]; cb.onchange = () => set(k, cb.checked);
+      } else if (s.type === 'color') {
+        f.innerHTML = `<label for="${id}"><span></span><output></output></label><div class="swatches"><input type="color" id="${id}"></div>`;
+        const c = f.querySelector('input'), out = f.querySelector('output'); c.value = vals[k]; out.textContent = vals[k];
+        c.oninput = () => { out.textContent = c.value; set(k, c.value); };
+      } else if (s.type === 'colors') {
+        f.innerHTML = `<label><span></span></label><div class="swatches"></div>`;
+        const box = f.querySelector('.swatches');
+        const arr = vals[k].slice();
+        arr.forEach((hex, i) => {
+          const c = document.createElement('input'); c.type = 'color'; c.id = `${id}-${i}`; c.value = hex.length === 4 ? '#' + [...hex.slice(1)].map((x) => x + x).join('') : hex;
+          c.setAttribute('aria-label', `${label} ${i + 1}`);
+          c.oninput = () => { arr[i] = c.value; set(k, arr.slice()); };
+          box.appendChild(c);
+        });
+      } else if (s.type === 'seed') {
+        f.innerHTML = `<label for="${id}"><span></span></label><input type="text" id="${id}" inputmode="numeric">`;
+        const t = f.querySelector('input'); t.value = vals[k]; t.onchange = () => set(k, t.value);
+      } else {
+        const long = String(vals[k]).length > 28;
+        f.innerHTML = `<label for="${id}"><span></span></label>${long ? `<textarea id="${id}"></textarea>` : `<input type="text" id="${id}">`}`;
+        const t = f.querySelector('input,textarea'); t.value = vals[k]; t.onchange = () => set(k, t.value);
+      }
+      f.querySelector('label span').textContent = label;
+      if (s.help) f.title = s.help;
+      form.appendChild(f);
+    }
+  }
+  let timer = 0;
+  function set(k, v) { state.params[k] = v; save(); updateCode(); clearTimeout(timer); timer = setTimeout(draw, 60); }
+
+  // --- preview drawing (fast pass, then a supersampled pass) ---
+  const view = $('view'), vctx = view.getContext('2d');
+  let drawSeq = 0, tileCanvas = document.createElement('canvas');
+  async function draw() {
+    const my = ++drawSeq; $('busy').hidden = false;
+    const params = { ...state.params };
+    for (const ss of [1, 2]) {
+      const r = await renderAsync(state.id, state.size, params, state.output, ss);
+      if (my !== drawSeq) return;
+      if (!r.ok) { $('busy').textContent = r.error; return; }
+      tileCanvas.width = r.w; tileCanvas.height = r.h;
+      tileCanvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(r.data), r.w, r.h), 0, 0);
+      blit();
+    }
+    $('busy').hidden = true;
+  }
+  function blit() {
+    const n = state.tiling, W = view.width, t = W / n;
+    vctx.imageSmoothingEnabled = true; vctx.imageSmoothingQuality = 'high';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) vctx.drawImage(tileCanvas, x * t, y * t, t, t);
+  }
+
+  function updateCode() {
+    const m = meta(), d = defaultsOf(m);
+    const changed = Object.fromEntries(Object.entries(state.params).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(d[k])));
+    const p = Object.keys(changed).length ? JSON.stringify(changed, null, 2).replace(/\n/g, '\n  ') : '{}';
+    const out = state.output === 'color' ? '' : `,\n  output: '${state.output}'`;
+    $('code').textContent = `import { render } from './texturelib/src/index.js';\n\nconst img = render('${m.id}', {\n  width: ${state.size * 2},\n  params: ${p}${out}\n});\nctx.putImageData(new ImageData(img.data, img.width, img.height), 0, 0);`;
+  }
+
+  function select(id) {
+    state.id = id; state.params = {}; save();
+    const m = meta();
+    $('pname').textContent = m.name; $('pid').textContent = m.id; $('pdesc').textContent = m.description;
+    [...list.children].forEach((el) => el.setAttribute('aria-current', String(el.querySelector('span').textContent === id)));
+    buildForm(); updateCode(); draw();
+  }
+
+  const seg = (elId, key, cast, after) => {
+    const el = $(elId);
+    [...el.children].forEach((b) => {
+      b.setAttribute('aria-pressed', String(String(state[key]) === b.dataset.v));
+      b.onclick = () => { state[key] = cast(b.dataset.v); [...el.children].forEach((x) => x.setAttribute('aria-pressed', String(x === b))); save(); after(); };
+    });
+  };
+  seg('tiling', 'tiling', Number, blit);
+  seg('mapmode', 'output', String, () => { updateCode(); draw(); });
+  seg('tilesize', 'size', Number, () => { updateCode(); draw(); });
+
+  $('shuffle').onclick = () => { const m = meta(); if (m.params.seed) { state.params.seed = (Math.random() * 1e6) | 0; buildForm(); updateCode(); draw(); save(); } };
+  $('reset').onclick = () => { state.params = {}; buildForm(); updateCode(); draw(); save(); };
+  $('copy').onclick = async () => {
+    const txt = $('code').textContent;
+    try { await navigator.clipboard.writeText(txt); $('toast').textContent = 'Copied'; }
+    catch { const r = document.createRange(); r.selectNodeContents($('code')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('toast').textContent = 'Selected — press Ctrl/⌘+C'; }
+    setTimeout(() => ($('toast').textContent = ''), 2200);
+  };
+
+  const cur = all.find((p) => p.id === state.id);
+  state.cat = cur.category;
+  [...tabs.children].forEach((b, i) => b.setAttribute('aria-pressed', String(CATS[i] === state.cat)));
+  buildList();
+  const keep = { ...state.params }; select(state.id); state.params = keep; buildForm(); updateCode(); draw();
+})();
+</script>

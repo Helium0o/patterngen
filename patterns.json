@@ -1,0 +1,3025 @@
+[
+ {
+  "id": "plain-weave",
+  "name": "Plain weave (tabby)",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "cotton",
+   "shirting",
+   "canvas"
+  ],
+  "description": "1/1 over-under: the base of poplin, canvas, chambray. Different warp/weft colours give a chambray/iridescent look.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 16,
+    "min": 1,
+    "max": 128,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "warp": {
+    "type": "color",
+    "default": "#3d5a80",
+    "label": "Warp colour"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#e0e6ee",
+    "label": "Weft colour"
+   }
+  }
+ },
+ {
+  "id": "twill",
+  "name": "Twill",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "denim",
+   "gabardine",
+   "chino",
+   "suiting"
+  ],
+  "description": "Diagonal-rib weave. 2/2 = gabardine/serge, 3/1 = denim/drill. S or Z diagonal.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 8,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "over": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 6,
+    "label": "Over (warp up)"
+   },
+   "under": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 6,
+    "label": "Under (warp down)"
+   },
+   "direction": {
+    "type": "enum",
+    "default": "Z",
+    "options": [
+     "Z",
+     "S"
+    ],
+    "label": "Diagonal"
+   },
+   "warp": {
+    "type": "color",
+    "default": "#4a3f35",
+    "label": "Warp colour"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#b9a88f",
+    "label": "Weft colour"
+   }
+  }
+ },
+ {
+  "id": "satin",
+  "name": "Satin",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "silk",
+   "lining",
+   "luxury"
+  ],
+  "description": "Long floats, scattered interlacings: smooth lustrous face. Regular satin needs a move number coprime to the shaft count, so 6 shafts is not offered.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 6,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.04,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap"
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "shafts": {
+    "type": "enum",
+    "default": 5,
+    "options": [
+     5,
+     7,
+     8,
+     10,
+     12
+    ],
+    "label": "Shafts"
+   },
+   "face": {
+    "type": "enum",
+    "default": "warp",
+    "options": [
+     "warp",
+     "weft"
+    ],
+    "label": "Face"
+   },
+   "warp": {
+    "type": "color",
+    "default": "#7b1e3a",
+    "label": "Warp colour"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#3a0f1e",
+    "label": "Weft colour"
+   }
+  }
+ },
+ {
+  "id": "basket-weave",
+  "name": "Basket / hopsack",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "oxford",
+   "hopsack",
+   "upholstery"
+  ],
+  "description": "Plain weave with k threads acting as one (2 = hopsack / oxford-like).",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 6,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "group": {
+    "type": "int",
+    "default": 2,
+    "min": 2,
+    "max": 6,
+    "label": "Threads per group"
+   },
+   "warp": {
+    "type": "color",
+    "default": "#e7dcc5",
+    "label": "Warp"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#8a9a7b",
+    "label": "Weft"
+   }
+  }
+ },
+ {
+  "id": "herringbone",
+  "name": "Herringbone twill",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "tweed",
+   "coat",
+   "suiting"
+  ],
+  "description": "2/2 twill whose diagonal reverses every N ends, giving the broken-zigzag \"fish bone\".",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 3,
+    "min": 1,
+    "max": 32,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "band": {
+    "type": "int",
+    "default": 8,
+    "min": 2,
+    "max": 32,
+    "label": "Ends per band"
+   },
+   "warp": {
+    "type": "color",
+    "default": "#2b2b2b",
+    "label": "Warp"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#cfc8b8",
+    "label": "Weft"
+   }
+  }
+ },
+ {
+  "id": "houndstooth",
+  "name": "Houndstooth",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "tweed",
+   "check",
+   "classic",
+   "print"
+  ],
+  "description": "Colour-and-weave effect: 2/2 twill with 4 dark / 4 light in both warp and weft (Wikipedia, Permanent Style). Band 2 = puppytooth.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 32,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "band": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 16,
+    "label": "Threads per colour band"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#151515",
+     "#f2efe6"
+    ],
+    "label": "Dark, light",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   }
+  }
+ },
+ {
+  "id": "pick-and-pick",
+  "name": "Pick-and-pick / sharkskin",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "suiting"
+  ],
+  "description": "2/2 twill with alternating 1 dark / 1 light warp and weft — the stepped sharkskin texture.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 12,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#2d3440",
+     "#a9b1bc"
+    ],
+    "label": "Dark, light",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   }
+  }
+ },
+ {
+  "id": "glen-check",
+  "name": "Glen check / Prince of Wales",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "suiting",
+   "check",
+   "classic"
+  ],
+  "description": "2/2 twill alternating a houndstooth block (4&4) with a hairline block (2&2) in warp and weft; optional coloured overcheck.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 16,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#1f1f1f",
+     "#ece8dd"
+    ],
+    "label": "Dark, light",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "overcheck": {
+    "type": "bool",
+    "default": true,
+    "label": "Overcheck"
+   },
+   "overcheckColor": {
+    "type": "color",
+    "default": "#2f5e9e",
+    "label": "Overcheck colour"
+   }
+  }
+ },
+ {
+  "id": "gingham",
+  "name": "Gingham",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "shirt",
+   "picnic",
+   "check"
+  ],
+  "description": "Plain weave, equal coloured and white bands in warp and weft. Use style=flat at small sizes for a print-style check.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 32,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "band": {
+    "type": "int",
+    "default": 6,
+    "min": 1,
+    "max": 32,
+    "label": "Threads per band"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#c8102e",
+     "#ffffff"
+    ],
+    "label": "Colour, ground",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   }
+  }
+ },
+ {
+  "id": "tartan",
+  "name": "Tartan / plaid (threadcount)",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "plaid",
+   "kilt",
+   "flannel",
+   "check"
+  ],
+  "description": "Renders any tartan from a threadcount like \"K4 R24 K24 Y4\" (letters = colours, numbers = threads). Symmetric setts mirror about the pivots. Woven in 2/2 twill so the crossing blocks blend like real cloth.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 1,
+    "min": 1,
+    "max": 16,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.06,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap"
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "preset": {
+    "type": "enum",
+    "default": "black-watch",
+    "options": [
+     "black-watch",
+     "simple-green",
+     "four-colour",
+     "buffalo-check",
+     "custom"
+    ],
+    "label": "Preset"
+   },
+   "threadcount": {
+    "type": "string",
+    "default": "K4 R24 K24 Y4",
+    "label": "Threadcount (when preset = custom)",
+    "help": "Letters: K W R DR B DB LB A G DG LG Y N LN P T O C M S, or #rrggbb/N",
+    "maxLength": 4000
+   },
+   "symmetric": {
+    "type": "bool",
+    "default": true,
+    "label": "Symmetric sett"
+   },
+   "countScale": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0.1,
+    "max": 4,
+    "label": "Thread scale",
+    "help": "Multiplies every count (smaller = finer threads, larger pattern repeat per tile)."
+   }
+  }
+ },
+ {
+  "id": "denim",
+  "name": "Denim",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "jeans",
+   "workwear"
+  ],
+  "description": "3/1 right-hand (Z) twill, indigo warp with ring-spun tone variation, ecru weft, optional low-frequency wash/fade.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 16,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.7,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity"
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "indigo": {
+    "type": "color",
+    "default": "#1f3561",
+    "label": "Indigo warp"
+   },
+   "weft": {
+    "type": "color",
+    "default": "#d9d2c0",
+    "label": "Weft"
+   },
+   "wash": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Wash / fade"
+   }
+  }
+ },
+ {
+  "id": "weave-draft",
+  "name": "Custom weave draft",
+  "category": "woven",
+  "tags": [
+   "clothes",
+   "jacquard",
+   "dobby",
+   "custom"
+  ],
+  "description": "Any dobby structure from a draft string: rows = picks separated by \"/\", 1 = warp up. Colour orders as comma lists of hex with counts.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "fabric",
+    "options": [
+     "fabric",
+     "flat",
+     "draft"
+    ],
+    "label": "Style",
+    "help": "fabric = shaded yarns; flat = solid colour per crossing; draft = B/W weave draft"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 64,
+    "label": "Repeats"
+   },
+   "yarnGap": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.5,
+    "label": "Yarn gap",
+    "help": "Fraction of each thread cell left as gap between yarns."
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.35,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity",
+    "help": "Per-yarn tone variation (slubs)."
+   },
+   "twist": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Fibre twist",
+    "help": "Strength of the diagonal fibre striation."
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "draft": {
+    "type": "string",
+    "default": "11100/01110/00111/10011/11001",
+    "label": "Draft rows",
+    "help": "e.g. \"1100/0110/0011/1001\" = 2/2 twill",
+    "maxLength": 4000
+   },
+   "warpColors": {
+    "type": "colors",
+    "default": [
+     "#264653",
+     "#e9c46a"
+    ],
+    "label": "Warp colour order",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "warpCounts": {
+    "type": "string",
+    "default": "6 2",
+    "label": "Warp counts",
+    "maxLength": 4000
+   },
+   "weftColors": {
+    "type": "colors",
+    "default": [
+     "#f4f1de"
+    ],
+    "label": "Weft colour order",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "weftCounts": {
+    "type": "string",
+    "default": "1",
+    "label": "Weft counts",
+    "maxLength": 4000
+   }
+  }
+ },
+ {
+  "id": "knit",
+  "name": "Knit stitches",
+  "category": "knit",
+  "tags": [
+   "clothes",
+   "sweater",
+   "jersey",
+   "wool"
+  ],
+  "description": "Stockinette/jersey, garter, ribs, seed, moss, basketweave — drawn as real V stitches and purl bumps.",
+  "params": {
+   "stitchesAcross": {
+    "type": "int",
+    "default": 16,
+    "min": 2,
+    "max": 256,
+    "label": "Stitches across tile"
+   },
+   "gauge": {
+    "type": "float",
+    "default": 1.36,
+    "min": 0.6,
+    "max": 2.5,
+    "label": "Rows per stitch width",
+    "help": "Row/stitch gauge ratio (≈30 rows / 22 sts)."
+   },
+   "yarnRadius": {
+    "type": "float",
+    "default": 0.25,
+    "min": 0.1,
+    "max": 0.32,
+    "label": "Yarn thickness"
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.4,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 3,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "stitch": {
+    "type": "enum",
+    "default": "stockinette",
+    "options": [
+     "stockinette",
+     "reverse-stockinette",
+     "garter",
+     "rib-1x1",
+     "rib-2x2",
+     "seed",
+     "moss",
+     "basketweave",
+     "broken-rib"
+    ],
+    "label": "Stitch pattern"
+   },
+   "color": {
+    "type": "color",
+    "default": "#b23a48",
+    "label": "Yarn colour"
+   }
+  }
+ },
+ {
+  "id": "fair-isle",
+  "name": "Fair Isle / jacquard knit",
+  "category": "knit",
+  "tags": [
+   "clothes",
+   "sweater",
+   "nordic",
+   "christmas",
+   "colourwork"
+  ],
+  "description": "Stockinette colourwork from a chart: rows separated by \"/\", digits index the palette (0 = background).",
+  "params": {
+   "stitchesAcross": {
+    "type": "int",
+    "default": 24,
+    "min": 2,
+    "max": 256,
+    "label": "Stitches across tile"
+   },
+   "gauge": {
+    "type": "float",
+    "default": 1.36,
+    "min": 0.6,
+    "max": 2.5,
+    "label": "Rows per stitch width",
+    "help": "Row/stitch gauge ratio (≈30 rows / 22 sts)."
+   },
+   "yarnRadius": {
+    "type": "float",
+    "default": 0.25,
+    "min": 0.1,
+    "max": 0.32,
+    "label": "Yarn thickness"
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.4,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 3,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "chart": {
+    "type": "enum",
+    "default": "fair-isle-band",
+    "options": [
+     "none",
+     "diamonds",
+     "zigzag",
+     "fair-isle-band",
+     "snowflake",
+     "checks",
+     "custom"
+    ],
+    "label": "Chart"
+   },
+   "customChart": {
+    "type": "string",
+    "default": "0110/1001/1001/0110",
+    "label": "Custom chart",
+    "maxLength": 4000
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f1ebdd",
+     "#9b1d20",
+     "#1d3557",
+     "#3a6b35"
+    ],
+    "label": "Palette (0,1,2,3…)",
+    "help": "",
+    "minItems": 1,
+    "maxItems": 10
+   }
+  }
+ },
+ {
+  "id": "cable-knit",
+  "name": "Cable knit (aran)",
+  "category": "knit",
+  "tags": [
+   "clothes",
+   "sweater",
+   "aran",
+   "fisherman",
+   "wool"
+  ],
+  "description": "Rope cables (2 strands × 2 stitches crossing every N rows) separated by purl columns.",
+  "params": {
+   "stitchesAcross": {
+    "type": "int",
+    "default": 24,
+    "min": 8,
+    "max": 256,
+    "label": "Stitches across tile"
+   },
+   "gauge": {
+    "type": "float",
+    "default": 1.36,
+    "min": 0.6,
+    "max": 2.5,
+    "label": "Rows per stitch width",
+    "help": "Row/stitch gauge ratio (≈30 rows / 22 sts)."
+   },
+   "yarnRadius": {
+    "type": "float",
+    "default": 0.25,
+    "min": 0.1,
+    "max": 0.32,
+    "label": "Yarn thickness"
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.4,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 3,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   },
+   "crossEvery": {
+    "type": "int",
+    "default": 6,
+    "min": 3,
+    "max": 16,
+    "label": "Rows between crossings"
+   },
+   "purlBetween": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 6,
+    "label": "Purl stitches each side"
+   },
+   "color": {
+    "type": "color",
+    "default": "#e8dcc4",
+    "label": "Yarn colour"
+   }
+  }
+ },
+ {
+  "id": "corduroy",
+  "name": "Corduroy",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "trousers",
+   "jacket",
+   "retro"
+  ],
+  "description": "Raised pile wales separated by grooves; wale count = cord size (wide wale ≈ 8, needlecord ≈ 24 per tile).",
+  "params": {
+   "wales": {
+    "type": "int",
+    "default": 12,
+    "min": 2,
+    "max": 128,
+    "label": "Wales across"
+   },
+   "groove": {
+    "type": "float",
+    "default": 0.18,
+    "min": 0.02,
+    "max": 0.5,
+    "label": "Groove width"
+   },
+   "color": {
+    "type": "color",
+    "default": "#8a5a2b",
+    "label": "Colour"
+   },
+   "pile": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Pile texture"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 31,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "quilted",
+  "name": "Quilted / padded",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "puffer",
+   "jacket",
+   "bag",
+   "luxury"
+  ],
+  "description": "Puffy padded cells (diamond or square channel) with dashed stitch lines; lit from top-left, height map included.",
+  "params": {
+   "layout": {
+    "type": "enum",
+    "default": "diamond",
+    "options": [
+     "diamond",
+     "square",
+     "channel"
+    ],
+    "label": "Layout"
+   },
+   "cells": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 32,
+    "label": "Cells across"
+   },
+   "puff": {
+    "type": "float",
+    "default": 0.8,
+    "min": 0,
+    "max": 1,
+    "label": "Puffiness"
+   },
+   "color": {
+    "type": "color",
+    "default": "#2c2c34",
+    "label": "Fabric"
+   },
+   "stitch": {
+    "type": "color",
+    "default": "#9a9aa6",
+    "label": "Stitch thread"
+   },
+   "dashes": {
+    "type": "int",
+    "default": 9,
+    "min": 0,
+    "max": 40,
+    "label": "Stitches per seam (0 = none)"
+   }
+  }
+ },
+ {
+  "id": "mesh",
+  "name": "Mesh / fishnet / tulle",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "fishnet",
+   "sportswear",
+   "lace",
+   "net"
+  ],
+  "description": "Open net of round yarn over a backing colour (use backing = skin tone for fishnet, or alpha-key it). Diamond fishnet or hexagonal tulle.",
+  "params": {
+   "layout": {
+    "type": "enum",
+    "default": "diamond",
+    "options": [
+     "diamond",
+     "hex"
+    ],
+    "label": "Net shape"
+   },
+   "cells": {
+    "type": "int",
+    "default": 6,
+    "min": 2,
+    "max": 64,
+    "label": "Openings across"
+   },
+   "yarn": {
+    "type": "float",
+    "default": 0.09,
+    "min": 0.02,
+    "max": 0.3,
+    "label": "Yarn thickness (cell units)"
+   },
+   "color": {
+    "type": "color",
+    "default": "#141414",
+    "label": "Yarn"
+   },
+   "backing": {
+    "type": "color",
+    "default": "#e0b49a",
+    "label": "Backing"
+   }
+  }
+ },
+ {
+  "id": "sequins",
+  "name": "Sequins / paillettes",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "party",
+   "glitter",
+   "evening",
+   "metallic"
+  ],
+  "description": "Overlapping discs in staggered rows, each tilted randomly so it catches light differently; centre hole and rim highlight.",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 12,
+    "min": 2,
+    "max": 96,
+    "label": "Sequins across"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#c9a227",
+     "#e8d27a"
+    ],
+    "label": "Shadow, highlight",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "sparkle": {
+    "type": "float",
+    "default": 0.6,
+    "min": 0,
+    "max": 1,
+    "label": "Sparkle"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 33,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "cross-stitch",
+  "name": "Cross-stitch / embroidery",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "embroidery",
+   "folk",
+   "craft",
+   "pixel-art"
+  ],
+  "description": "Aida cloth grid with holes; chart digits (1-9) are stitched as shaded X crosses in palette colours, 0 = empty. Pixel-art friendly.",
+  "params": {
+   "chart": {
+    "type": "enum",
+    "default": "heart",
+    "options": [
+     "heart",
+     "diamonds",
+     "border",
+     "flower",
+     "custom"
+    ],
+    "label": "Chart"
+   },
+   "customChart": {
+    "type": "string",
+    "default": "0110/1111/0110",
+    "label": "Custom chart",
+    "maxLength": 4000
+   },
+   "repeats": {
+    "type": "int",
+    "default": 3,
+    "min": 1,
+    "max": 32,
+    "label": "Chart repeats"
+   },
+   "fabric": {
+    "type": "color",
+    "default": "#efe7d6",
+    "label": "Aida"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#b3202a",
+     "#2f6d3a",
+     "#1f3b73",
+     "#d9a21b"
+    ],
+    "label": "Thread palette (1,2,3…)",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 35,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "shibori",
+  "name": "Shibori / tie-dye",
+  "category": "textile",
+  "tags": [
+   "clothes",
+   "indigo",
+   "tie-dye",
+   "japanese",
+   "boho"
+  ],
+  "description": "Resist-dye looks: itajime (clamped shapes), arashi (pole-wrapped diagonal storm lines), kumo (spider-web bound circles). Dye bleed is fbm-driven.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "itajime",
+    "options": [
+     "itajime",
+     "arashi",
+     "kumo"
+    ],
+    "label": "Technique"
+   },
+   "cells": {
+    "type": "int",
+    "default": 3,
+    "min": 1,
+    "max": 32,
+    "label": "Repeats"
+   },
+   "shape": {
+    "type": "enum",
+    "default": "square",
+    "options": [
+     "square",
+     "circle",
+     "triangle"
+    ],
+    "label": "Itajime shape"
+   },
+   "bleed": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Dye bleed"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#1b2a4a",
+     "#f2efe8"
+    ],
+    "label": "Dye, cloth",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "seed": {
+    "type": "seed",
+    "default": 37,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "stripes",
+  "name": "Stripes",
+  "category": "geometric",
+  "tags": [
+   "clothes",
+   "print",
+   "breton",
+   "pinstripe",
+   "awning",
+   "graphics"
+  ],
+  "description": "Any number of coloured bands with relative widths, horizontal/vertical/diagonal. Pinstripe: widths \"1 14\". Breton: \"1 1.4\".",
+  "params": {
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#1b2a49",
+     "#f4f1ea"
+    ],
+    "label": "Band colours (cycled)",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "widths": {
+    "type": "string",
+    "default": "1 1",
+    "label": "Relative widths",
+    "help": "Space-separated, one per band (cycled to match colours)",
+    "maxLength": 4000
+   },
+   "direction": {
+    "type": "enum",
+    "default": "horizontal",
+    "options": [
+     "horizontal",
+     "vertical",
+     "diagonal",
+     "anti-diagonal",
+     "shallow",
+     "steep"
+    ],
+    "label": "Direction"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 8,
+    "min": 1,
+    "max": 256,
+    "label": "Repeats"
+   }
+  }
+ },
+ {
+  "id": "checkerboard",
+  "name": "Checkerboard",
+  "category": "geometric",
+  "tags": [
+   "print",
+   "graphics",
+   "floor",
+   "racing"
+  ],
+  "description": "Two-colour checks. Cell count is forced even so it tiles.",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 8,
+    "min": 2,
+    "max": 256,
+    "label": "Cells across (even)"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#111111",
+     "#f2f2f2"
+    ],
+    "label": "Colours",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   }
+  }
+ },
+ {
+  "id": "dots",
+  "name": "Polka dots & tossed motifs",
+  "category": "geometric",
+  "tags": [
+   "clothes",
+   "print",
+   "polka",
+   "confetti",
+   "graphics",
+   "kids"
+  ],
+  "description": "Dots/stars/hearts/etc. in textile repeat layouts: block, half-drop, brick or tossed (random, non-overlapping).",
+  "params": {
+   "layout": {
+    "type": "enum",
+    "default": "half-drop",
+    "options": [
+     "block",
+     "half-drop",
+     "brick",
+     "tossed"
+    ],
+    "label": "Repeat layout"
+   },
+   "shape": {
+    "type": "enum",
+    "default": "circle",
+    "options": [
+     "circle",
+     "ring",
+     "square",
+     "diamond",
+     "cross",
+     "star",
+     "heart"
+    ],
+    "label": "Motif"
+   },
+   "cells": {
+    "type": "int",
+    "default": 8,
+    "min": 2,
+    "max": 128,
+    "label": "Cells across"
+   },
+   "size": {
+    "type": "float",
+    "default": 0.28,
+    "min": 0.05,
+    "max": 0.5,
+    "label": "Motif radius (cell units)"
+   },
+   "sizeJitter": {
+    "type": "float",
+    "default": 0,
+    "min": 0,
+    "max": 1,
+    "label": "Size variation"
+   },
+   "rotate": {
+    "type": "bool",
+    "default": false,
+    "label": "Random rotation"
+   },
+   "background": {
+    "type": "color",
+    "default": "#f6efe2",
+    "label": "Background"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#c1272d"
+    ],
+    "label": "Motif colours (random pick)",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 5,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "chevron",
+  "name": "Chevron / zigzag",
+  "category": "geometric",
+  "tags": [
+   "clothes",
+   "print",
+   "missoni",
+   "graphics"
+  ],
+  "description": "Zigzag bands. Band count is rounded to a multiple of the colour count so colours tile.",
+  "params": {
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#264653",
+     "#2a9d8f",
+     "#e9c46a",
+     "#f4a261",
+     "#e76f51"
+    ],
+    "label": "Band colours",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "bands": {
+    "type": "int",
+    "default": 10,
+    "min": 1,
+    "max": 128,
+    "label": "Bands (vertical)"
+   },
+   "zigs": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 64,
+    "label": "Zigzags across"
+   },
+   "amplitude": {
+    "type": "float",
+    "default": 1.5,
+    "min": 0,
+    "max": 8,
+    "label": "Amplitude (bands)"
+   }
+  }
+ },
+ {
+  "id": "argyle",
+  "name": "Argyle",
+  "category": "geometric",
+  "tags": [
+   "clothes",
+   "knitwear",
+   "socks",
+   "golf",
+   "preppy"
+  ],
+  "description": "Alternating diamonds on a ground with thin diagonal overcheck lines.",
+  "params": {
+   "cols": {
+    "type": "int",
+    "default": 4,
+    "min": 2,
+    "max": 64,
+    "label": "Diamonds across (even)"
+   },
+   "rows": {
+    "type": "int",
+    "default": 2,
+    "min": 2,
+    "max": 64,
+    "label": "Diamond rows (even)"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#5b2333",
+     "#2e4057",
+     "#c9b79c"
+    ],
+    "label": "Diamond A, diamond B, ground",
+    "help": "",
+    "minItems": 3,
+    "maxItems": 3
+   },
+   "lineColor": {
+    "type": "color",
+    "default": "#f2e8cf",
+    "label": "Overcheck line"
+   },
+   "lineWidth": {
+    "type": "float",
+    "default": 0.012,
+    "min": 0,
+    "max": 0.05,
+    "label": "Line width (uv)"
+   }
+  }
+ },
+ {
+  "id": "honeycomb",
+  "name": "Hexagon / honeycomb",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "tiles",
+   "sci-fi",
+   "mesh",
+   "print"
+  ],
+  "description": "Pointy-top hex grid. Vertical rows are chosen so hexes are within a few % of regular on a square tile.",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 8,
+    "min": 1,
+    "max": 128,
+    "label": "Hexes across"
+   },
+   "style": {
+    "type": "enum",
+    "default": "cells",
+    "options": [
+     "cells",
+     "lines",
+     "bevel"
+    ],
+    "label": "Style"
+   },
+   "line": {
+    "type": "float",
+    "default": 0.06,
+    "min": 0,
+    "max": 0.4,
+    "label": "Line width (hex units)"
+   },
+   "background": {
+    "type": "color",
+    "default": "#1d1d24",
+    "label": "Line / gap colour"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f2b134",
+     "#f7c75e",
+     "#e89f1f",
+     "#fad681"
+    ],
+    "label": "Cell colours (random)",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 2,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "truchet",
+  "name": "Truchet tiles",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "maze",
+   "generative",
+   "print"
+  ],
+  "description": "Smith quarter-circle tiles (2-colourable: colour = inside ⊕ orientation ⊕ parity), 10-PRINT maze, or triangle tiles.",
+  "params": {
+   "variant": {
+    "type": "enum",
+    "default": "arcs",
+    "options": [
+     "arcs",
+     "maze",
+     "triangles"
+    ],
+    "label": "Variant"
+   },
+   "cells": {
+    "type": "int",
+    "default": 10,
+    "min": 2,
+    "max": 128,
+    "label": "Tiles across (even)"
+   },
+   "fill": {
+    "type": "bool",
+    "default": true,
+    "label": "Two-colour fill"
+   },
+   "lineWidth": {
+    "type": "float",
+    "default": 0.08,
+    "min": 0,
+    "max": 0.5,
+    "label": "Line width (tile units)"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#0f4c5c",
+     "#f6e7cb",
+     "#e36414"
+    ],
+    "label": "Colour A, B, line",
+    "help": "",
+    "minItems": 3,
+    "maxItems": 3
+   },
+   "seed": {
+    "type": "seed",
+    "default": 11,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "seigaiha",
+  "name": "Seigaiha / scales",
+  "category": "geometric",
+  "tags": [
+   "print",
+   "japanese",
+   "kimono",
+   "waves",
+   "mermaid",
+   "clothes"
+  ],
+  "description": "Overlapping concentric half-circles (Japanese wave). Rings alternate through the palette.",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 6,
+    "min": 1,
+    "max": 64,
+    "label": "Scales across"
+   },
+   "rings": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 12,
+    "label": "Rings per scale"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#1d3557",
+     "#f1faee",
+     "#457b9d",
+     "#f1faee"
+    ],
+    "label": "Ring colours (outer → inner)",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "outline": {
+    "type": "float",
+    "default": 0.03,
+    "min": 0,
+    "max": 0.2,
+    "label": "Outline (scale units)"
+   },
+   "outlineColor": {
+    "type": "color",
+    "default": "#1d3557",
+    "label": "Outline colour"
+   }
+  }
+ },
+ {
+  "id": "ogee",
+  "name": "Ogee lattice",
+  "category": "geometric",
+  "tags": [
+   "print",
+   "damask",
+   "wallpaper",
+   "moroccan",
+   "clothes"
+  ],
+  "description": "Interlocking onion shapes. Exact two-family tiling because sin²(πy) + sin²(π(y+½)) = 1.",
+  "params": {
+   "cols": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 64,
+    "label": "Shapes across"
+   },
+   "rows": {
+    "type": "int",
+    "default": 3,
+    "min": 1,
+    "max": 64,
+    "label": "Shapes down"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#e9d8a6",
+     "#94d2bd"
+    ],
+    "label": "Family A, family B",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "line": {
+    "type": "float",
+    "default": 0.03,
+    "min": 0,
+    "max": 0.2,
+    "label": "Outline (cell units)"
+   },
+   "lineColor": {
+    "type": "color",
+    "default": "#005f73",
+    "label": "Outline"
+   },
+   "inset": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0,
+    "max": 0.4,
+    "label": "Inner outline inset (0 = off)"
+   }
+  }
+ },
+ {
+  "id": "islamic-star",
+  "name": "Islamic star (Hankin)",
+  "category": "geometric",
+  "tags": [
+   "print",
+   "tiles",
+   "moroccan",
+   "zellige",
+   "graphics",
+   "ornament"
+  ],
+  "description": "Hankin's polygons-in-contact: rays leave each edge midpoint at a contact angle and meet inside the tile. 4.8.8 tiling gives 8-point stars.",
+  "params": {
+   "tiling": {
+    "type": "enum",
+    "default": "4.8.8",
+    "options": [
+     "4.8.8",
+     "4.4.4.4"
+    ],
+    "label": "Underlying tiling"
+   },
+   "angle": {
+    "type": "float",
+    "default": 67.5,
+    "min": 20,
+    "max": 85,
+    "label": "Contact angle (deg)"
+   },
+   "repeats": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 32,
+    "label": "Repeats"
+   },
+   "width": {
+    "type": "float",
+    "default": 0.035,
+    "min": 0.002,
+    "max": 0.15,
+    "label": "Strap width (cell units)"
+   },
+   "style": {
+    "type": "enum",
+    "default": "strap",
+    "options": [
+     "line",
+     "strap"
+    ],
+    "label": "Style"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#0b3954",
+     "#f4d35e",
+     "#0b3954"
+    ],
+    "label": "Ground, strap, strap edge",
+    "help": "",
+    "minItems": 3,
+    "maxItems": 3
+   }
+  }
+ },
+ {
+  "id": "terrazzo",
+  "name": "Terrazzo",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "interior",
+   "surface",
+   "print",
+   "stone"
+  ],
+  "description": "Irregular stone chips at two scales on a speckled ground.",
+  "params": {
+   "density": {
+    "type": "int",
+    "default": 7,
+    "min": 1,
+    "max": 64,
+    "label": "Large chips across"
+   },
+   "chipSize": {
+    "type": "float",
+    "default": 0.32,
+    "min": 0.05,
+    "max": 0.5,
+    "label": "Chip size"
+   },
+   "background": {
+    "type": "color",
+    "default": "#ece6dc",
+    "label": "Ground"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#c75d3c",
+     "#2f5d62",
+     "#e3b23c",
+     "#9aa5a1",
+     "#3d3b3c"
+    ],
+    "label": "Chip colours",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 8,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "halftone",
+  "name": "Halftone dots",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "pop-art",
+   "comic",
+   "print",
+   "retro"
+  ],
+  "description": "Screen of dots whose area follows a periodic noise or wave field. Screen angles use integer lattice vectors so the tile stays seamless.",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 24,
+    "min": 4,
+    "max": 256,
+    "label": "Dots across"
+   },
+   "angle": {
+    "type": "enum",
+    "default": "45°",
+    "options": [
+     "0°",
+     "45°",
+     "26.6°",
+     "18.4°"
+    ],
+    "label": "Screen angle"
+   },
+   "field": {
+    "type": "enum",
+    "default": "noise",
+    "options": [
+     "noise",
+     "waves",
+     "flat"
+    ],
+    "label": "Tone field"
+   },
+   "tone": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Tone (flat field)"
+   },
+   "scale": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 16,
+    "label": "Field frequency"
+   },
+   "contrast": {
+    "type": "float",
+    "default": 1.4,
+    "min": 0.2,
+    "max": 4,
+    "label": "Contrast"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f7f1e3",
+     "#e63946"
+    ],
+    "label": "Paper, ink",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "seed": {
+    "type": "seed",
+    "default": 4,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "contour-lines",
+  "name": "Topographic contours",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "map",
+   "outdoor",
+   "print",
+   "abstract"
+  ],
+  "description": "Iso-lines of a periodic fbm field with constant on-screen width (gradient-normalised), thicker index lines every Nth level.",
+  "params": {
+   "levels": {
+    "type": "int",
+    "default": 14,
+    "min": 2,
+    "max": 64,
+    "label": "Levels"
+   },
+   "scale": {
+    "type": "int",
+    "default": 2,
+    "min": 1,
+    "max": 16,
+    "label": "Field frequency"
+   },
+   "lineWidth": {
+    "type": "float",
+    "default": 1.6,
+    "min": 0.3,
+    "max": 6,
+    "label": "Line width (px @512)"
+   },
+   "indexEvery": {
+    "type": "int",
+    "default": 5,
+    "min": 0,
+    "max": 20,
+    "label": "Index line every"
+   },
+   "fill": {
+    "type": "bool",
+    "default": false,
+    "label": "Hypsometric fill"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f3efe0",
+     "#7a5c3e"
+    ],
+    "label": "Ground, line",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "fillColors": {
+    "type": "colors",
+    "default": [
+     "#2b5f4a",
+     "#7da36b",
+     "#e6d8a6",
+     "#c58b4e",
+     "#f4efe6"
+    ],
+    "label": "Fill ramp",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 6,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "bricks",
+  "name": "Bricks / tiles",
+  "category": "geometric",
+  "tags": [
+   "graphics",
+   "game",
+   "wall",
+   "material",
+   "subway-tile"
+  ],
+  "description": "Running or stack bond with mortar, per-brick colour variation and a bevelled height map (good for normal maps).",
+  "params": {
+   "bond": {
+    "type": "enum",
+    "default": "running",
+    "options": [
+     "running",
+     "stack"
+    ],
+    "label": "Bond"
+   },
+   "cols": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 64,
+    "label": "Bricks per row"
+   },
+   "rows": {
+    "type": "int",
+    "default": 8,
+    "min": 2,
+    "max": 128,
+    "label": "Rows (even for running)"
+   },
+   "mortar": {
+    "type": "float",
+    "default": 0.06,
+    "min": 0,
+    "max": 0.3,
+    "label": "Mortar (brick-height units)"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#9c4a33",
+     "#b05a3c",
+     "#8a3f2c",
+     "#a8553b"
+    ],
+    "label": "Brick colours",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "mortarColor": {
+    "type": "color",
+    "default": "#cfc6b8",
+    "label": "Mortar"
+   },
+   "roughness": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "label": "Surface noise"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 9,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "noise",
+  "name": "Fractal noise (fbm / ridged / turbulence)",
+  "category": "organic",
+  "tags": [
+   "graphics",
+   "clouds",
+   "heightmap",
+   "mask",
+   "game",
+   "terrain"
+  ],
+  "description": "Periodic Perlin/value fbm with optional domain warp, mapped through a colour ramp. Use output=height for height maps.",
+  "params": {
+   "basis": {
+    "type": "enum",
+    "default": "perlin",
+    "options": [
+     "perlin",
+     "value"
+    ],
+    "label": "Basis"
+   },
+   "mode": {
+    "type": "enum",
+    "default": "fbm",
+    "options": [
+     "fbm",
+     "ridged",
+     "turbulence"
+    ],
+    "label": "Mode"
+   },
+   "frequency": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 64,
+    "label": "Base frequency (integer)"
+   },
+   "octaves": {
+    "type": "int",
+    "default": 6,
+    "min": 1,
+    "max": 10,
+    "label": "Octaves"
+   },
+   "gain": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0.1,
+    "max": 0.9,
+    "label": "Gain (persistence)"
+   },
+   "warp": {
+    "type": "float",
+    "default": 0,
+    "min": 0,
+    "max": 1,
+    "label": "Domain warp"
+   },
+   "contrast": {
+    "type": "float",
+    "default": 1,
+    "min": 0.2,
+    "max": 4,
+    "label": "Contrast"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#04202f",
+     "#0b4f6c",
+     "#20a4c3",
+     "#c9f1f5"
+    ],
+    "label": "Colour ramp",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 1,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "marble",
+  "name": "Marble",
+  "category": "organic",
+  "tags": [
+   "graphics",
+   "stone",
+   "luxury",
+   "interior",
+   "material"
+  ],
+  "description": "Turbulence-displaced sine veins (classic Perlin marble) plus a fine secondary vein layer.",
+  "params": {
+   "base": {
+    "type": "color",
+    "default": "#eeebe5",
+    "label": "Base"
+   },
+   "vein": {
+    "type": "color",
+    "default": "#5d5a57",
+    "label": "Vein"
+   },
+   "tint": {
+    "type": "color",
+    "default": "#c9b8a0",
+    "label": "Cloud tint"
+   },
+   "veins": {
+    "type": "int",
+    "default": 1,
+    "min": 1,
+    "max": 16,
+    "label": "Main veins"
+   },
+   "turbulence": {
+    "type": "float",
+    "default": 1,
+    "min": 0,
+    "max": 6,
+    "label": "Turbulence"
+   },
+   "sharpness": {
+    "type": "float",
+    "default": 5,
+    "min": 1,
+    "max": 30,
+    "label": "Vein sharpness"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 12,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "wood",
+  "name": "Wood grain / planks",
+  "category": "organic",
+  "tags": [
+   "graphics",
+   "floor",
+   "material",
+   "game",
+   "interior"
+  ],
+  "description": "Flat-sawn grain: growth rings wobbled by anisotropic noise, pore streaks, optional plank seams.",
+  "params": {
+   "planks": {
+    "type": "int",
+    "default": 4,
+    "min": 1,
+    "max": 32,
+    "label": "Planks across"
+   },
+   "rings": {
+    "type": "float",
+    "default": 9,
+    "min": 1,
+    "max": 40,
+    "label": "Rings per plank"
+   },
+   "wobble": {
+    "type": "float",
+    "default": 0.8,
+    "min": 0,
+    "max": 3,
+    "label": "Grain wobble"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#e1b382",
+     "#c08552",
+     "#8c5a3c"
+    ],
+    "label": "Light, mid, dark",
+    "help": "",
+    "minItems": 3,
+    "maxItems": 3
+   },
+   "seam": {
+    "type": "float",
+    "default": 0.004,
+    "min": 0,
+    "max": 0.02,
+    "label": "Seam width (uv)"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 21,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "leopard",
+  "name": "Leopard / cheetah",
+  "category": "organic",
+  "tags": [
+   "clothes",
+   "print",
+   "animal",
+   "fashion"
+  ],
+  "description": "Rosettes: broken irregular rings around each Worley feature point with a darker centre; cheetah = solid spots.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "leopard",
+    "options": [
+     "leopard",
+     "cheetah"
+    ],
+    "label": "Style"
+   },
+   "cells": {
+    "type": "int",
+    "default": 6,
+    "min": 2,
+    "max": 48,
+    "label": "Rosettes across"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#d9a35b",
+     "#b97834",
+     "#1d140e"
+    ],
+    "label": "Ground, centre, spot",
+    "help": "",
+    "minItems": 3,
+    "maxItems": 3
+   },
+   "irregularity": {
+    "type": "float",
+    "default": 0.6,
+    "min": 0,
+    "max": 1,
+    "label": "Irregularity"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 13,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "giraffe",
+  "name": "Giraffe",
+  "category": "organic",
+  "tags": [
+   "clothes",
+   "print",
+   "animal"
+  ],
+  "description": "Warped Voronoi patches separated by a cream network (F2 − F1 band).",
+  "params": {
+   "cells": {
+    "type": "int",
+    "default": 5,
+    "min": 2,
+    "max": 48,
+    "label": "Patches across"
+   },
+   "border": {
+    "type": "float",
+    "default": 0.12,
+    "min": 0.02,
+    "max": 0.5,
+    "label": "Border width"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f1e3c6",
+     "#8a4b1f",
+     "#6e3a17",
+     "#a35d2a"
+    ],
+    "label": "Network, patch colours…",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 8
+   },
+   "seed": {
+    "type": "seed",
+    "default": 14,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "zebra",
+  "name": "Zebra / tiger stripes",
+  "category": "organic",
+  "tags": [
+   "clothes",
+   "print",
+   "animal"
+  ],
+  "description": "Noise-displaced, thickness-modulated stripes; tiger style adds broken stripe ends.",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "zebra",
+    "options": [
+     "zebra",
+     "tiger"
+    ],
+    "label": "Style"
+   },
+   "stripes": {
+    "type": "int",
+    "default": 9,
+    "min": 1,
+    "max": 64,
+    "label": "Stripes"
+   },
+   "warpAmount": {
+    "type": "float",
+    "default": 0.6,
+    "min": 0,
+    "max": 2,
+    "label": "Warp"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#f5f2ea",
+     "#141414"
+    ],
+    "label": "Ground, stripe",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 2
+   },
+   "seed": {
+    "type": "seed",
+    "default": 15,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "camouflage",
+  "name": "Camouflage",
+  "category": "organic",
+  "tags": [
+   "clothes",
+   "military",
+   "streetwear",
+   "print"
+  ],
+  "description": "Woodland (layered thresholded fbm blobs) or digital (same field quantised to a pixel grid).",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "woodland",
+    "options": [
+     "woodland",
+     "digital"
+    ],
+    "label": "Style"
+   },
+   "scale": {
+    "type": "int",
+    "default": 3,
+    "min": 1,
+    "max": 16,
+    "label": "Blob frequency"
+   },
+   "pixels": {
+    "type": "int",
+    "default": 64,
+    "min": 8,
+    "max": 256,
+    "label": "Digital grid"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#7d7a52",
+     "#4b5b33",
+     "#6b4b2e",
+     "#1f1f1a"
+    ],
+    "label": "Base + layers",
+    "help": "",
+    "minItems": 2,
+    "maxItems": 6
+   },
+   "coverage": {
+    "type": "float",
+    "default": 0.5,
+    "min": 0.2,
+    "max": 0.8,
+    "label": "Layer coverage"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 16,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "reaction-diffusion",
+  "name": "Reaction–diffusion (Gray–Scott)",
+  "category": "organic",
+  "tags": [
+   "graphics",
+   "generative",
+   "biological",
+   "coral",
+   "print"
+  ],
+  "description": "Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction). Presets: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.",
+  "params": {
+   "preset": {
+    "type": "enum",
+    "default": "coral",
+    "options": [
+     "coral",
+     "mitosis",
+     "maze",
+     "spots",
+     "worms",
+     "holes",
+     "custom"
+    ],
+    "label": "Preset"
+   },
+   "feed": {
+    "type": "float",
+    "default": 0.0545,
+    "min": 0.01,
+    "max": 0.1,
+    "label": "Feed (custom)"
+   },
+   "kill": {
+    "type": "float",
+    "default": 0.062,
+    "min": 0.04,
+    "max": 0.075,
+    "label": "Kill (custom)"
+   },
+   "grid": {
+    "type": "int",
+    "default": 160,
+    "min": 48,
+    "max": 512,
+    "label": "Simulation grid",
+    "help": "Bigger = more, smaller features per tile"
+   },
+   "iterations": {
+    "type": "int",
+    "default": 5000,
+    "min": 200,
+    "max": 30000,
+    "label": "Iterations"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#0b132b",
+     "#5bc0be",
+     "#f7f7f2"
+    ],
+    "label": "Colour ramp",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "seed": {
+    "type": "seed",
+    "default": 17,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "voronoi-cells",
+  "name": "Voronoi cells (stained glass / cracked earth / cobblestone)",
+  "category": "organic",
+  "tags": [
+   "graphics",
+   "game",
+   "material",
+   "mosaic",
+   "stone"
+  ],
+  "description": "Worley F1/F2 with exact 5×5 search. Edge band = F2 − F1 (≈ distance to the Voronoi border).",
+  "params": {
+   "style": {
+    "type": "enum",
+    "default": "stained-glass",
+    "options": [
+     "stained-glass",
+     "cracked-earth",
+     "cobblestone",
+     "cells"
+    ],
+    "label": "Style"
+   },
+   "cells": {
+    "type": "int",
+    "default": 8,
+    "min": 2,
+    "max": 96,
+    "label": "Cells across"
+   },
+   "jitter": {
+    "type": "float",
+    "default": 1,
+    "min": 0,
+    "max": 1,
+    "label": "Jitter"
+   },
+   "edge": {
+    "type": "float",
+    "default": 0.08,
+    "min": 0,
+    "max": 0.5,
+    "label": "Edge width (cell units)"
+   },
+   "colors": {
+    "type": "colors",
+    "default": [
+     "#ff5d8f",
+     "#ffd166",
+     "#06d6a0",
+     "#118ab2",
+     "#f8f9fa"
+    ],
+    "label": "Cell colours",
+    "minItems": 1,
+    "maxItems": 16
+   },
+   "edgeColor": {
+    "type": "color",
+    "default": "#151515",
+    "label": "Edge colour"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 18,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ },
+ {
+  "id": "leather",
+  "name": "Leather grain",
+  "category": "organic",
+  "tags": [
+   "clothes",
+   "material",
+   "bag",
+   "shoes",
+   "upholstery"
+  ],
+  "description": "Dense pebbled cells with soft creases, tonal mottling. Pair output=normal for 3D.",
+  "params": {
+   "color": {
+    "type": "color",
+    "default": "#5a3522",
+    "label": "Colour"
+   },
+   "cells": {
+    "type": "int",
+    "default": 40,
+    "min": 8,
+    "max": 160,
+    "label": "Grain density"
+   },
+   "crease": {
+    "type": "float",
+    "default": 0.8,
+    "min": 0,
+    "max": 1,
+    "label": "Crease depth"
+   },
+   "seed": {
+    "type": "seed",
+    "default": 19,
+    "label": "Seed",
+    "help": "Same seed + params = identical output, always."
+   }
+  }
+ }
+]

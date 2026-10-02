@@ -1,0 +1,14 @@
+{
+  "name": "texturelib",
+  "version": "1.0.0",
+  "description": "Deterministic, seamlessly tileable procedural patterns and textures (textiles, knits, geometric prints, organic materials). Zero dependencies, ES modules, runs in browser and Node.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": { ".": "./src/index.js" },
+  "scripts": {
+    "test": "node tests/run-tests.mjs",
+    "render": "node tools/render-all.mjs",
+    "catalog": "node tools/gen-catalog.mjs"
+  },
+  "license": "MIT"
+}
