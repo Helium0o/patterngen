@@ -1,0 +1,51 @@
+--- a/src/patterns/knit.js
++++ b/src/patterns/knit.js
+@@ -128,9 +128,11 @@
+   const rowRep = lcm(stitch.h, chart.h);
+   const R = Math.max(1, Math.round((W * p.gauge) / rowRep)) * rowRep;
+   const kinds = new Uint8Array(stitch.w * stitch.h);
+-  for (let r = 0; r < stitch.h; r++) for (let c = 0; c < stitch.w; c++) kinds[r * stitch.w + c] = stitch.fn(r, c) === 'p' ? 1 : 0;
++  // kinds: 0 knit, 1 purl, 2 eyelet (yarn-over: no loop, a see-through hole)
++  for (let r = 0; r < stitch.h; r++) for (let c = 0; c < stitch.w; c++) { const k = stitch.fn(r, c); kinds[r * stitch.w + c] = k === 'p' ? 1 : k === 'o' ? 2 : 0; }
+   const allK = kinds.every((k) => k === 0), allP = kinds.every((k) => k === 1);
+-  const s = { W, R, H: W / R, sw: stitch.w, sh: stitch.h, kinds, uniform: allK ? 1 : allP ? 2 : 0, chart, colors: colors.map(hexToLinear), p, Lb: 0.22 * (p.yarnRadius / 0.25) };
++  const eyelets = kinds.some((k) => k === 2);
++  const s = { W, R, H: W / R, sw: stitch.w, sh: stitch.h, kinds, uniform: allK ? 1 : allP ? 2 : 0, eyelets, chart, colors: colors.map(hexToLinear), p, Lb: 0.22 * (p.yarnRadius / 0.25) };
+   s.bias = biasTable(s);
+   return s;
+ }
+@@ -183,6 +185,7 @@
+     if (ly < -0.75 * H || ly > 2.1 * H) continue;
+     for (let dc = -1; dc <= 1; dc++) {
+       const c = c0 + dc, lx = X - c;
++      if (s.eyelets && s.kinds[mod(r, s.sh) * s.sw + mod(c, s.sw)] === 2) continue; // eyelet: no loop here
+       const bias = s.uniform ? (s.uniform === 1 ? 0.16 : 0.08) : s.bias[mod(r, s.sh) * s.sw + mod(c, s.sw)];
+       if (isPurl(s, r, c)) purlBumps(lx, ly, H, Lb * 1.05, r, c, bias);
+       else knitLegs(lx, ly, H, Lb, r, c, bias);
+@@ -196,6 +199,26 @@
+   const fibreLod = detail(1 / (s.W * 7), ctx.pixel);
+   evalField(s, X, Y);
+   const p = s.p;
++  if (s.eyelets) {
++    // eyelets: a round hole centred on the yarn-over stitch, ringed by the stretched loops around it
++    let hd = 9, ang = 0;
++    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
++      const r = Math.floor(Y) + dr, c = Math.floor(X) + dc;
++      if (s.kinds[mod(r, s.sh) * s.sw + mod(c, s.sw)] !== 2) continue;
++      const dx = X - c - 0.5, dy = (Y - r - 0.55) * s.H * 1.1, d = Math.hypot(dx, dy);
++      if (d < hd) { hd = d; ang = Math.atan2(dy, dx); }
++    }
++    if (hd < 0.62) {
++      // ring of stretched yarn: a dome across the ring, lit from the top-left, with ply ridges around it
++      const q = clamp01((hd - 0.4) / 0.22), prof = Math.sin(Math.PI * q);
++      shade(out, s.colors[0], (0.45 + 0.6 * prof) * (0.9 + 0.12 * Math.cos(ang + 2.3)) * (0.92 + 0.08 * Math.sin(ang * 9)));
++      out[4] = 0.4 + 0.4 * prof;
++      // the hole itself is transparent (antialiased edge); TODO: LOD fade to the average coverage when tiny
++      const a = clamp01(0.5 + (hd - 0.4) / Math.max(s.W * ctx.px, 1e-9));
++      if (a < 1) { out[0] *= a; out[1] *= a; out[2] *= a; out[3] = a; out[4] *= a; }
++      return;
++    }
++  }
+   let b, h, rr, cc;
+   if (hit.z < 0) {
+     // opening between loops: the yarn of the loops behind shows through, in shadow

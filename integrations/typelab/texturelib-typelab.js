@@ -61,36 +61,44 @@
     const keys = Object.keys(schema).filter((k) => isColorType(schema[k]) && !clear(schema[k]));
     const rank = (k) => (FIRST_KEYS.includes(k) ? FIRST_KEYS.indexOf(k) : 99);
     keys.sort((a, b) => rank(a) - rank(b)); // stable: everything else keeps schema order
-    const slots = keys.map((k) => ({ key: k, type: schema[k].type, def: schema[k].default, len: schema[k].type === 'colors' ? schema[k].default.length : 1, max: schema[k].maxItems || 16, label: schema[k].label || k }));
+    const slots = keys.map((k) => ({ key: k, type: schema[k].type, def: schema[k].default, len: schema[k].type === 'colors' ? schema[k].default.length : 1, min: schema[k].minItems || 1, max: schema[k].maxItems || 16, label: schema[k].label || k }));
     const variable = slots.filter((s) => s.type === 'colors').pop();
     return { slots, varKey: variable ? variable.key : null, bgKey: keys.find((k) => BG_KEYS.includes(k)) || null };
   }
 
   /** L (TypeLab layer) -> texturelib params. */
+  // The variable-length list (varKey) absorbs the difference between L.colors and the default slot count:
+  // + Add color makes it longer, presets with fewer colours make it shorter. Every other slot has a fixed size.
+  const slotLen = (g, s, extra) => (s.key === g.tx.varKey ? Math.max(s.min, Math.min(s.max, s.len + extra)) : s.len);
   function paramsFor(g, L) {
     const p = Object.assign({}, L.p || {});
     const cols = Array.isArray(L.colors) ? L.colors : [];
     const total = g.tx.slots.reduce((a, s) => a + s.len, 0);
-    const extra = Math.max(0, cols.length - total);
+    const extra = cols.length - total;
     let i = 0;
     for (const s of g.tx.slots) {
       if (s.type === 'color') { p[s.key] = cols[i] || s.def; i++; continue; }
-      const n = Math.min(s.max, s.len + (s.key === g.tx.varKey ? extra : 0));
+      const n = slotLen(g, s, extra);
       const list = [];
       for (let j = 0; j < n; j++) list.push(cols[i + j] || s.def[j % s.def.length]);
       p[s.key] = list;
-      i += s.len + (s.key === g.tx.varKey ? extra : 0);
+      i += n;
     }
     if (L.bgOn === false && g.tx.bgKey) p[g.tx.bgKey] = 'transparent';
     return p;
   }
 
-  /** texturelib params -> L.colors list (used for presets). */
+  /** texturelib params -> L.colors list (used for presets). Inverse of paramsFor. */
   function colorsFrom(g, params) {
     const out = [];
     for (const s of g.tx.slots) {
       const v = params[s.key] !== undefined ? params[s.key] : s.def;
-      if (s.type === 'color') out.push(v); else out.push(...v);
+      if (s.type === 'color') { out.push(v); continue; }
+      let list = typeof v === 'string' ? v.split(',').map((c) => c.trim()).filter(Boolean) : Array.isArray(v) ? v : [];
+      if (!list.length) list = s.def;
+      // fixed-size lists are cycled/truncated to their slot count so the slots after them stay aligned
+      const n = s.key === g.tx.varKey ? Math.max(s.min, Math.min(s.max, list.length)) : s.len;
+      for (let j = 0; j < n; j++) out.push(list[j % list.length]);
     }
     return out;
   }
@@ -102,7 +110,7 @@
     if ((include && !include.has(meta.id)) || exclude.has(meta.id) || PT.list.some((x) => x.id === PREFIX + meta.id)) continue;
     const schema = meta.params;
     const params = Object.keys(schema).filter((k) => !isColorType(schema[k])).map((k) => toTLParam(k, schema[k]));
-    const cs = colorSlots(schema);
+    const cs = colorSlots(schema), slotKeys = new Set(cs.slots.map((s) => s.key));
     const defaults = T.defaults(meta.id);
     const g = {
       id: PREFIX + meta.id, name: meta.name, cat: CATS[meta.category] || meta.category,
@@ -120,7 +128,10 @@
       g.presets = presets.map((pr) => {
         const full = Object.assign({}, defaults, pr.params);
         const p = {};
-        for (const k of Object.keys(pr.params)) if (!isColorType(schema[k])) p[k] = schema[k].type === 'enum' ? String(pr.params[k]) : pr.params[k];
+        for (const k of Object.keys(pr.params)) {
+          if (!isColorType(schema[k])) p[k] = schema[k].type === 'enum' ? String(pr.params[k]) : pr.params[k];
+          else if (!slotKeys.has(k)) p[k] = pr.params[k]; // colour with no slot (transparent default, e.g. centre dots) rides in L.p
+        }
         return { name: pr.name, p, colors: colorsFrom(g, full) };
       });
     }

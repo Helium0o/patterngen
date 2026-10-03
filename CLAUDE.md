@@ -3,6 +3,7 @@
 Guide for Claude Code working **in this repo**.
 
 - **Integrating into TypeLab?** Read [TYPELAB_INTEGRATION.md](TYPELAB_INTEGRATION.md) instead. There's an installer and a verifier; you don't need to change this repo.
+- **Handed a TypeLab job, or building new patterns?** Read [TYPELAB_HANDOFF.md](TYPELAB_HANDOFF.md): every fix so far, the idea catalogue with formulas, and the prototypes in `ideas/`.
 - **Integrating into another app?** Read [INTEGRATION.md](INTEGRATION.md).
 
 ## What this is

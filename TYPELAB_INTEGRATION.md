@@ -12,13 +12,16 @@ the library internals to integrate it. Read the TL;DR, run it, then skim the res
 Run from the TypeLab repo root, with this repo cloned next to it as `../patterngen`:
 
 ```bash
-git clone https://github.com/Helium0o/patterngen ../patterngen          # once (or git -C ../patterngen pull)
+git clone -b claude/keen-ritchie-qy7bl3 https://github.com/Helium0o/patterngen ../patterngen   # once (or git -C ../patterngen pull)
 node ../patterngen/integrations/typelab/install.mjs .                       # copy 3 files + small edits (idempotent)
-NODE_PATH=$(npm root -g) node ../patterngen/integrations/typelab/verify-in-typelab.mjs app/index.html   # 12 checks in headless Chromium
+NODE_PATH=$(npm root -g) node ../patterngen/integrations/typelab/verify-in-typelab.mjs app/index.html   # 13 checks in headless Chromium
 npm start                                                                    # Pattern workspace → "Fabrics · woven" etc.
 npm run dist                                                                 # rebuild the .exe (electron-builder packages app/**/*)
 ```
 
+- Branch: the library lives on `claude/keen-ritchie-qy7bl3` (`main` only has the initial commit until that
+  branch is merged; after a merge, clone `main`). A cloud session attaches the repo with `add_repo`
+  (`helium0o/patterngen`) and checks out that branch.
 - Paths: the verifier lives in **this** repo (`../patterngen/integrations/typelab/`), not in TypeLab.
   `install.mjs` prints the exact verify command with absolute paths when it finishes.
 - `install.mjs` prints what it did. Exit code 1 means some edit's anchor wasn't found (TypeLab changed).
@@ -224,3 +227,5 @@ Thumbnails (≤ 192 px) render synchronously at 1 sample per pixel: tens of ms e
 - [PATTERNS.md](PATTERNS.md): every pattern, param, range and preset (generated).
 - [CLAUDE.md](CLAUDE.md): how the library is built and how to add or modify patterns.
 - `integrations/typelab/`: adapter, installer, verifier, patch, screenshot.
+- [TYPELAB_HANDOFF.md](TYPELAB_HANDOFF.md): everything in one place for a TypeLab session: every fix, plus
+  new pattern ideas with formulas, prototypes (`ideas/`) and TypeLab-side recipes (knit or weave the user's text).

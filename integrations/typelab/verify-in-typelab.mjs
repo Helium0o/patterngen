@@ -1,4 +1,4 @@
-// Verify the texturelib adapter inside a real TypeLab checkout, in headless Chromium (12 checks).
+// Verify the texturelib adapter inside a real TypeLab checkout, in headless Chromium (13 checks).
 //
 //   NODE_PATH=$(npm root -g) node <patterngen>/integrations/typelab/verify-in-typelab.mjs <typelab>/app/index.html [outDir]
 //
@@ -155,6 +155,30 @@ const svg = await page.evaluate(() => {
 });
 check(svg.hasImage && svg.swatch, 'SVG tile + swatch embed the tile as PNG');
 check(svg.none || svg.presets > 0, svg.none ? 'presets: none of the installed patterns has colour presets (skipped)' : `presets exposed with colours (${svg.gen}: ${svg.presets})`);
+
+// every preset, applied the way TypeLab's preset picker does (defaults + pr.p, then pr.colors), must render like
+// the library's own preset: catches colour slots drifting out of alignment
+const pre = await page.evaluate(() => {
+  const PT = TL.patterns, X = TL.texturelib, T = X.lib, bad = [];
+  let n = 0;
+  for (const id of X.added) {
+    const g = PT.get(id);
+    for (const pr of g.presets || []) {
+      const q = T.listPresets(g.tx.id).find((x) => x.name === pr.name);
+      if (!q) continue;
+      n++;
+      const L = PT.defaults(id);
+      L.p = Object.assign(L.p, pr.p);
+      if (pr.colors && pr.colors.length) L.colors = pr.colors.slice();
+      const a = T.render(g.tx.id, { width: 32, supersample: 1, params: X.paramsFor(L) }).data;
+      const b = T.render(g.tx.id, { width: 32, supersample: 1, preset: q.id }).data;
+      let d = 0; for (let k = 0; k < a.length; k++) d = Math.max(d, Math.abs(a[k] - b[k]));
+      if (d > 2) bad.push(`${q.id} (max diff ${d})`);
+    }
+  }
+  return { n, bad };
+});
+check(pre.bad.length === 0, `${pre.n} presets applied through TypeLab render like the library presets` + (pre.bad.length ? ': ' + pre.bad.join(', ') : ''));
 
 // inspector shows the generator's controls
 const insp = await page.evaluate(() => {

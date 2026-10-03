@@ -23,6 +23,7 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);                   // fill anyth
 | you want to… | read |
 |---|---|
 | **put it into TypeLab** | **[TYPELAB_INTEGRATION.md](TYPELAB_INTEGRATION.md)**: one install command, tested adapter |
+| **hand the whole job to another session** | **[TYPELAB_HANDOFF.md](TYPELAB_HANDOFF.md)**: install, every fix, 80+ pattern ideas with formulas, 23 prototypes (`ideas/`) |
 | use it in any other JS app | [INTEGRATION.md](INTEGRATION.md): API, scale/tiling, colours, recipes (canvas, text, CSS, SVG, WebGL, workers, React, Node) |
 | see every pattern / param / preset | [PATTERNS.md](PATTERNS.md) (generated) · `previews/sheets/*.jpg` · open `gallery.html` in a browser |
 | change or add patterns | [CLAUDE.md](CLAUDE.md): architecture, pattern contract, commands, tests |
