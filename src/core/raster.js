@@ -67,7 +67,9 @@ export function autoTiles(width, height) {
  *   normalFormat  'opengl' (default, +Y up / green up) | 'directx' (green flipped)
  *   tiles         [tilesX, tilesY] pattern repeats inside the image (default autoTiles)
  *   dither        default true (colour output)
- *   rows          [y0, y1] render only these rows (for splitting work across workers; colour/height only)
+ *   rows          [y0, y1] render only these rows (for splitting work across workers). With rows, use
+ *                 output 'color', 'height' or 'color+height' (normals need the full height field).
+ *   output 'color+height' returns {color, heights} without normal (internal, for worker bands)
  * @returns {{width, height, data, tiles}}  or for output 'maps': {width, height, tiles, color, heightMap, normalMap, heights}
  */
 export function rasterize(width, height, sample, opts = {}) {
@@ -85,7 +87,7 @@ export function rasterize(width, height, sample, opts = {}) {
   const rowsN = y1 - y0;
   const doDither = opts.dither !== false;
 
-  const wantColor = output === 'color' || output === 'maps';
+  const wantColor = output === 'color' || output === 'maps' || output === 'color+height';
   const wantHeight = output !== 'color';
   const color = wantColor ? new Uint8ClampedArray(width * rowsN * 4) : null;
   const heights = wantHeight ? new Float32Array(width * rowsN) : null;
@@ -118,6 +120,7 @@ export function rasterize(width, height, sample, opts = {}) {
   }
 
   if (output === 'color') return { width, height: rowsN === height ? height : rowsN, data: color, tiles: [tx, ty] };
+  if (output === 'color+height') return { width, height: rowsN, color, heights, tiles: [tx, ty] };
   if (output === 'height') return { width, height: rowsN === height ? height : rowsN, data: heightToGray(heights, doDither, width, y0), heights, tiles: [tx, ty] };
   const normal = new Uint8ClampedArray(width * height * 4);
   heightToNormal(heights, width, height, normal, opts.normalStrength ?? 4, opts.normalFormat, tileW);

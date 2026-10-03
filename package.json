@@ -1,14 +1,30 @@
 {
   "name": "texturelib",
-  "version": "1.0.0",
-  "description": "Deterministic, seamlessly tileable procedural patterns and textures (textiles, knits, geometric prints, organic materials). Zero dependencies, ES modules, runs in browser and Node.",
+  "version": "2.0.0",
+  "description": "Deterministic, seamlessly tileable procedural patterns and textures for apps: realistic fabrics (weaves, tartan, knits, cables, denim, tweed, velvet, sequins, lace), prints and materials. Zero dependencies, ES modules + a classic-script build, browser, workers and Node.",
   "type": "module",
   "main": "src/index.js",
-  "exports": { ".": "./src/index.js" },
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": { "types": "./src/index.d.ts", "default": "./src/index.js" },
+    "./browser": { "types": "./src/browser.d.ts", "default": "./src/browser.js" },
+    "./worker": "./src/worker.js",
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "bin": { "texturelib": "bin/texturelib.mjs" },
+  "files": ["src", "dist", "bin", "tools/png.mjs", "integrations", "README.md", "INTEGRATION.md", "TYPELAB_INTEGRATION.md", "PATTERNS.md", "patterns.json", "CLAUDE.md", "CHANGELOG.md"],
   "scripts": {
     "test": "node tests/run-tests.mjs",
+    "build": "node tools/build.mjs && node tools/build-gallery.mjs",
+    "catalog": "node tools/gen-catalog.mjs",
     "render": "node tools/render-all.mjs",
-    "catalog": "node tools/gen-catalog.mjs"
+    "sheets": "python3 tools/make-sheets.py",
+    "typecheck": "tsc -p tests/types",
+    "all": "npm run catalog && npm test && npm run build && npm run render && npm run sheets",
+    "typelab:install": "node integrations/typelab/install.mjs",
+    "typelab:verify": "node integrations/typelab/verify-in-typelab.mjs"
   },
+  "engines": { "node": ">=18" },
   "license": "MIT"
 }

@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>texturelib — classic script example (TypeLab style)</title>
+<!-- No bundler, no modules: the way TypeLab loads code. Works from file:// in Electron; in Chrome,
+     workers from file:// need --allow-file-access-from-files (or serve the folder over http). -->
+<style>body { font: 14px system-ui; margin: 16px } canvas { border-radius: 6px; max-width: 100% }</style>
+<p><select id="p"></select> <span id="s"></span></p>
+<canvas id="c" width="1024" height="512"></canvas>
+<script src="../dist/texturelib.js"></script>   <!-- defines window.TextureLib -->
+<script>
+  const T = window.TextureLib;
+  const ctx = document.getElementById('c').getContext('2d');
+  // classic worker build: keep texturelib.worker.js next to texturelib.js
+  const renderer = T.createRenderer({ workerUrl: '../dist/texturelib.worker.js' });
+  const sel = document.getElementById('p');
+  T.listPatterns().forEach((p) => sel.add(new Option(p.name, p.id)));
+  sel.value = 'denim';
+  async function draw() {
+    // 1. instant low-res preview on the main thread …
+    ctx.fillStyle = T.createPattern(ctx, T.render(sel.value, { width: 128, supersample: 1 }), { scale: 2 });
+    ctx.fillRect(0, 0, 1024, 512);
+    // 2. … then the full-quality tile from the workers
+    const t0 = performance.now();
+    const tile = await renderer.render(sel.value, { width: 256 }, { slot: 'demo' });
+    ctx.fillStyle = T.createPattern(ctx, tile);
+    ctx.fillRect(0, 0, 1024, 512);
+    document.getElementById('s').textContent = Math.round(performance.now() - t0) + ' ms, ' + renderer.workers + ' workers';
+  }
+  sel.onchange = () => draw().catch((e) => e.name !== 'AbortError' && console.error(e));
+  draw();
+</script>

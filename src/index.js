@@ -94,6 +94,22 @@ export function render(id, opts = {}) {
 }
 
 /**
+ * Low-level: render only rows [y0, y1) of a tile (used by the worker renderer to split work).
+ * opts as render() plus rows: [y0, y1] and output 'color' | 'height' | 'color+height'.
+ * @returns rasterize result for those rows ({width, height: rowCount, data | color, heights, tiles}) + params
+ */
+export function renderRegion(id, opts = {}) {
+  const pat = need(id);
+  const width = opts.width ?? opts.size ?? 512;
+  const height = opts.height ?? width;
+  const p = resolveFor(pat, opts);
+  const tiles = opts.tiles || autoTiles(Math.round(width), Math.round(height));
+  const state = pat.prepare(p, { width, height, tiles });
+  const img = rasterize(width, height, (u, v, out, ctx) => pat.sample(u, v, out, ctx, state), { ...opts, tiles });
+  return { id, ...img, params: p };
+}
+
+/**
  * Colour + height + normal maps in ONE sampling pass (for 3D materials / PBR).
  * @returns {{id, width, height, params, tiles, color, heightMap, normalMap, heights: Float32Array}}
  */

@@ -40,7 +40,9 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; al
 .stage-head code { font: 13px var(--mono); color: var(--indigo) }
 .desc { margin: 0; color: var(--muted); max-width: 70ch }
 .view { position: relative; width: 100%; aspect-ratio: 1; max-width: 100%; border-radius: 6px; overflow: hidden; background: var(--chip) }
-.view canvas { width: 100%; height: 100%; display: block; image-rendering: auto }
+.view canvas { width: 100%; height: 100%; display: block; image-rendering: auto; background: repeating-conic-gradient(#c8c8c8 0 25%, #eeeeee 0 50%) 0 0 / 24px 24px }
+details.more { border-top: 1px solid var(--line); padding-top: 8px; display: grid; gap: 14px }
+details.more summary { cursor: pointer; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .07em; color: var(--muted) }
 .busy { position: absolute; right: 10px; bottom: 10px; font: 12px var(--mono); background: var(--panel); color: var(--muted); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line) }
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden }
@@ -77,7 +79,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
 <div class="app">
   <header class="top">
     <h1>texturelib Swatch Book</h1>
-    <p>Every swatch here is generated live in your browser by the same code Claude Code will read. All tiles are seamless and identical for the same seed and settings.</p>
+    <p>Every swatch is generated live in your browser by texturelib itself — 52 seamless patterns and 120+ presets. Same seed and settings = identical pixels, in any browser, in Node and in TypeLab.</p>
   </header>
 
   <aside class="rail" aria-label="Pattern index">
@@ -124,7 +126,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
       <h3>Use it in your app</h3>
       <pre class="code" id="code"></pre>
       <div class="row"><button class="btn" id="copy" type="button">Copy code</button><span class="toast" id="toast" aria-live="polite"></span></div>
-      <p class="note">Paste into Claude Code with the texturelib folder in your project: <code>render()</code> returns RGBA pixels you can draw to a canvas or upload as a WebGL texture.</p>
+      <p class="note"><code>render()</code> returns straight-alpha RGBA pixels (ImageData layout) for a seamless tile: draw it, repeat it with a CanvasPattern, or upload it as a GL_REPEAT texture. See INTEGRATION.md.</p>
     </section>
   </main>
 </div>
@@ -133,6 +135,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
 <script>
 (() => {
   const SRC = document.getElementById('tlsrc').textContent;
+  const TL = window.TextureLib;
   const all = TL.listPatterns();
   const CATS = TL.CATEGORIES;
   const LABEL = { woven: 'Woven', knit: 'Knit', textile: 'Textile', geometric: 'Geometric', organic: 'Organic' };
@@ -142,7 +145,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
     self.onmessage = (e) => {
       const { job, id, size, params, output, ss } = e.data;
       try {
-        const img = TL.render(id, { width: size, params, output, supersample: ss, normalStrength: 6 });
+        const img = TextureLib.render(id, { width: size, params, output, supersample: ss, normalStrength: 6 });
         self.postMessage({ job, ok: true, w: img.width, h: img.height, data: img.data }, [img.data.buffer]);
       } catch (err) { self.postMessage({ job, ok: false, error: String(err) }); }
     };`], { type: 'text/javascript' })));
@@ -199,6 +202,18 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
   function buildForm() {
     const m = meta(); form.innerHTML = '';
     const vals = { ...defaultsOf(m), ...state.params };
+    const presets = TL.listPresets(m.id);
+    if (presets.length) {
+      const f = document.createElement('div'); f.className = 'field';
+      f.innerHTML = `<label for="preset-sel"><span>Preset</span></label><select id="preset-sel"><option value="">— choose a look —</option></select>`;
+      const sel = f.querySelector('select');
+      presets.forEach((pr) => { const op = document.createElement('option'); op.value = pr.id; op.textContent = pr.name; sel.appendChild(op); });
+      sel.value = state.preset || '';
+      sel.onchange = () => { state.preset = sel.value; const pr = presets.find((x) => x.id === sel.value); state.params = pr ? { ...pr.params } : {}; save(); buildForm(); updateCode(); draw(); };
+      form.appendChild(f);
+    }
+    const more = document.createElement('details'); more.className = 'more';
+    more.innerHTML = '<summary>More settings</summary>';
     for (const [k, s] of Object.entries(m.params)) {
       const f = document.createElement('div'); f.className = 'field';
       const id = `p-${m.id}-${k}`;
@@ -219,7 +234,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
         const cb = f.querySelector('input'); cb.checked = !!vals[k]; cb.onchange = () => set(k, cb.checked);
       } else if (s.type === 'color') {
         f.innerHTML = `<label for="${id}"><span></span><output></output></label><div class="swatches"><input type="color" id="${id}"></div>`;
-        const c = f.querySelector('input'), out = f.querySelector('output'); c.value = vals[k]; out.textContent = vals[k];
+        const c = f.querySelector('input'), out = f.querySelector('output'); c.value = /^#[0-9a-f]{6}/i.test(vals[k]) ? vals[k].slice(0, 7) : '#000000'; out.textContent = vals[k];
         c.oninput = () => { out.textContent = c.value; set(k, c.value); };
       } else if (s.type === 'colors') {
         f.innerHTML = `<label><span></span></label><div class="swatches"></div>`;
@@ -241,11 +256,20 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
       }
       f.querySelector('label span').textContent = label;
       if (s.help) f.title = s.help;
-      form.appendChild(f);
+      if (s.type === 'color' && /background|backing/.test(k)) {
+        // alpha: a transparent toggle (colour inputs have no alpha channel)
+        const t = document.createElement('label'); t.className = 'check';
+        t.innerHTML = '<input type="checkbox"><span>transparent</span>';
+        const cb = t.querySelector('input'); cb.checked = String(vals[k]).length === 9 && String(vals[k]).endsWith('00') || vals[k] === 'transparent';
+        cb.onchange = () => set(k, cb.checked ? 'transparent' : f.querySelector('input[type=color]').value);
+        f.appendChild(t);
+      }
+      (s.advanced ? more : form).appendChild(f);
     }
+    if (more.children.length > 1) form.appendChild(more);
   }
   let timer = 0;
-  function set(k, v) { state.params[k] = v; save(); updateCode(); clearTimeout(timer); timer = setTimeout(draw, 60); }
+  function set(k, v) { state.params[k] = v; state.preset = ''; save(); updateCode(); clearTimeout(timer); timer = setTimeout(draw, 60); }
 
   // --- preview drawing (fast pass, then a supersampled pass) ---
   const view = $('view'), vctx = view.getContext('2d');
@@ -266,6 +290,7 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
   function blit() {
     const n = state.tiling, W = view.width, t = W / n;
     vctx.imageSmoothingEnabled = true; vctx.imageSmoothingQuality = 'high';
+    vctx.clearRect(0, 0, W, W);
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) vctx.drawImage(tileCanvas, x * t, y * t, t, t);
   }
 
@@ -274,11 +299,11 @@ pre.code { margin: 0; font: 12px/1.5 var(--mono); background: var(--chip); borde
     const changed = Object.fromEntries(Object.entries(state.params).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(d[k])));
     const p = Object.keys(changed).length ? JSON.stringify(changed, null, 2).replace(/\n/g, '\n  ') : '{}';
     const out = state.output === 'color' ? '' : `,\n  output: '${state.output}'`;
-    $('code').textContent = `import { render } from './texturelib/src/index.js';\n\nconst img = render('${m.id}', {\n  width: ${state.size * 2},\n  params: ${p}${out}\n});\nctx.putImageData(new ImageData(img.data, img.width, img.height), 0, 0);`;
+    $('code').textContent = `// ES module (or TextureLib.render with the classic dist/texturelib.js)\nimport { render, createPattern } from './texturelib/src/browser.js';\n\nconst tile = render('${m.id}', {\n  width: ${state.size * 2},\n  params: ${p}${out}\n});\nctx.fillStyle = createPattern(ctx, tile);   // seamless fill\nctx.fillRect(0, 0, canvas.width, canvas.height);\n\n// TypeLab: Pattern workspace → generator "tx-${m.id}"`;
   }
 
   function select(id) {
-    state.id = id; state.params = {}; save();
+    state.id = id; state.params = {}; state.preset = ''; save();
     const m = meta();
     $('pname').textContent = m.name; $('pid').textContent = m.id; $('pdesc').textContent = m.description;
     [...list.children].forEach((el) => el.setAttribute('aria-current', String(el.querySelector('span').textContent === id)));

@@ -1,95 +1,112 @@
-# CLAUDE.md — texturelib
+# CLAUDE.md: texturelib (repo `patterngen`)
 
-Guide for Claude Code (and humans) working in or integrating this library.
+Guide for Claude Code working **in this repo**.
+
+- **Integrating into TypeLab?** Read [TYPELAB_INTEGRATION.md](TYPELAB_INTEGRATION.md) instead. There's an installer and a verifier; you don't need to change this repo.
+- **Integrating into another app?** Read [INTEGRATION.md](INTEGRATION.md).
 
 ## What this is
-A zero-dependency ES-module library of **45 procedural, seamlessly tileable patterns** — woven
-textiles, knits, textile surfaces/dyes, geometric prints and organic materials. Runs unchanged in
-the browser and Node ≥ 18. Every pattern is deterministic per seed and validated by `npm test`.
+
+A zero-dependency ES-module library of **52 procedural, seamlessly tileable patterns** (woven fabrics,
+knits, textile surfaces, geometric prints, organic materials) and **123 presets**. Every pattern is a
+pure function `sample(u, v)` on the unit torus, so tiles are exactly periodic and deterministic per
+seed. Runs unchanged in browsers, Web Workers, Electron and Node ≥ 18.
 
 ## Commands
+
 ```bash
-npm test                       # 330+ checks: known answers, determinism, seams, strict periodicity, fuzzing
-node tools/quick.mjs <id> [size] '{"param":1}'   # render one pattern, 2×2 tiled, to scratch/<id>.png
-npm run render                 # all patterns + variants + height/normal maps -> previews/
-python3 tools/make-sheets.py   # contact sheets -> previews/sheets/ (needs Pillow)
-npm run catalog                # regenerate PATTERNS.md + patterns.json from the code
+npm test                                   # 471 checks (must stay green). --only <id> to test one pattern
+node tools/dev.mjs <category> <id> [size] '{"param":1}' [--name out]   # one pattern → scratch/<out>.png (+ -h height, -n normal); works mid-edit
+node tools/quick.mjs <id> [size] '{json}' [presetId]                    # via the public API, 2×2 tiled to eyeball seams
+python3 tools/sheet.py scratch/x.png [--crop 128] [--cols 4] a.png b.png  # contact sheet; --crop zooms into detail
+npm run catalog                            # PATTERNS.md + patterns.json + src/patterns.d.ts (run after ANY schema/preset change)
+npm run build                              # dist/* bundles (esbuild via npx) + gallery.html (run before committing dist changes)
+npm run render && npm run sheets           # previews/png (ignored) → committed previews/*.jpg + previews/sheets/*.jpg
+npm run typecheck                          # tsc on tests/types/usage.ts (global tsc or npx tsc)
+NODE_PATH=$(npm root -g) node integrations/typelab/verify-in-typelab.mjs <typelab>/app/index.html   # adapter inside real TypeLab
 ```
 
-## Public API (`src/index.js`)
-```js
-import { render, listPatterns, getPattern, defaults, createSampler } from './src/index.js';
+Use the pip package `pillow` for the Python tools. Look at renders with the Read tool: always check new or changed patterns visually, at full tile and zoomed (`--crop`).
 
-const img = render('tartan', { width: 1024, params: { preset: 'black-watch', seed: 3 } });
-// img = { width, height, data: Uint8ClampedArray RGBA, params (resolved), id }
-// browser: ctx.putImageData(new ImageData(img.data, img.width, img.height), 0, 0)
+## Layout
 
-render('cable-knit', { width: 512, output: 'height' });                  // grey height map
-render('cable-knit', { width: 512, output: 'normal', normalStrength: 6 }); // tangent-space normal map (OpenGL +Y)
-render('dots', { width: 256, supersample: 1 });                           // fast preview (default 2 = 4 samples/px)
-
-const s = createSampler('marble', { seed: 9 });  // (u, v) -> [r, g, b, height], linear colour, any u/v (wraps)
-listPatterns();      // metadata + param schemas for building UIs (no functions)
 ```
-`patterns.json` is the same metadata as a static file; `PATTERNS.md` is the readable catalog.
+src/index.js            public API: render, renderMaps, renderArea, renderRegion, listPatterns, presets, featureCount, createSampler
+src/browser.js          index + canvas helpers (toCanvas, createPattern, toBlob, cssBackground) + createRenderer/serveWorker
+src/renderer.js         worker pool (row bands), LRU cache, slot/AbortSignal cancellation, main-thread fallback
+src/worker.js           module worker entry (dist/texturelib.worker.js is the classic one)
+src/presets.js          PRESETS: { id, pattern, name, params } — every preset is validated + rendered by the tests
+src/index.d.ts, browser.d.ts   hand-written types; src/patterns.d.ts is GENERATED (npm run catalog)
+src/core/raster.js      rasterize(): RGSS supersampling, premultiplied RGBA accumulation, dithered sRGB encode, height/normal, tiles, rows
+src/core/color.js       parseColor (hex/rgb/hsl/transparent), premultiplied linear colours, mix/shade/over/ramp, PALETTES
+src/core/params.js      schema builders P.int/float/bool/enumOf/color/colors/string/seed, adv(), resolveParams() coercion
+src/core/noise.js       periodic perlin/value, noiseField()/warpField() (build once!), worley, voronoiEdge (exact border distance)
+src/core/hash.js        PCG3D, mulberry32, seedFromString
+src/core/math.js        clamp/mod/smoothstep, coverage() AA, detail() LOD, lambert(), SDFs (segment, box, polygon, star, heart)
+src/patterns/woven.js   draft engine (weaveState/weaveSample): lit yarns, floats, crimp, sheen, slubs, heather, fuzz, neps; tartan parser
+src/patterns/knit.js    loop engine: curved leg/purl-bump elements over a 3×3 (4×3) stitch neighbourhood, depth rules, charts, cables
+src/patterns/textile.js corduroy, velvet, quilted, mesh, sequins, cross-stitch, eyelet-lace, shibori
+src/patterns/geometric.js stripes … grid-paper (analytic SDF antialiasing everywhere)
+src/patterns/organic.js noise, marble, granite, wood, parquet, animal prints, snakeskin, camo, reaction-diffusion, voronoi, leather
+tests/run-tests.mjs     the suite;  tests/types/  compile-only type tests
+tools/                  dev/quick renders, render-all, make-sheets.py, gen-catalog, build, build-gallery, png encoder
+integrations/typelab/   TypeLab adapter + install.mjs + verify-in-typelab.mjs + reference patch + screenshot
+dist/                   built bundles (committed so consumers need no build step) — never edit by hand
+bin/texturelib.mjs      CLI
+```
 
-## Pattern contract (read before adding/editing a pattern)
-Each pattern is a plain object in `src/patterns/<category>.js`, exported in the file's default array:
+## Pattern contract (v2) — read before adding/editing a pattern
+
 ```js
 {
   id: 'kebab-case-unique', name: 'Human name', category: 'woven'|'knit'|'textile'|'geometric'|'organic',
-  tags: [...], description: '1–2 sentences, mention the technique',
-  params: { key: P.int(def, min, max, label, help), ... },  // see src/core/params.js
-  prepare(p) { return state },          // p = validated params. Precompute here (colours, tables, sims).
-  sample(u, v, out, ctx, state) { ... } // hot path: write out[0..2] LINEAR rgb, out[3] height 0..1
+  tags: [...], description: '1–2 sentences: what it is + the technique',
+  scale: 'repeats',                         // the param that sets density (features per tile)
+  features: (p, state) => [nx, ny, 'threads'],   // optional: exact feature count (else uses p[scale])
+  params: { key: P.int(def, min, max, label, help), key2: adv(P.float(...)), ... },
+  prepare(p, { width, height, tiles }) { return state },   // p = validated params. Precompute EVERYTHING here.
+  sample(u, v, out, ctx, state) { ... },   // hot path, called ~1M times per 512² tile
 }
 ```
-Invariants — the test suite enforces all of them:
-1. **Torus domain.** `sample` must satisfy `sample(u,v) == sample(u+k, v+m)` for integers k, m.
-   - Use integer repeat counts. Things that alternate (checkers, half-drop, brick, argyle) need EVEN counts → `evenInt()`.
-   - Wrap every lattice/cell index with `mod(i, n)` *before* hashing (`hash01(mod(i,n), mod(j,n), seed)`).
-   - Noise: only `core/noise.js` (periodic lattice; integer frequencies). Never `Math.random`, never sin-hash.
-   - Rotations only via integer lattice vectors (e.g. `a*u + b*v` with integer a, b).
-2. **Determinism.** All randomness from `core/hash.js` (PCG3D integer hash / mulberry32) keyed by the `seed` param.
-3. **Stability.** No throws for any input (params are coerced by `resolveParams`), no NaN; clamp heights to [0,1].
-4. **Linear colour.** Convert hex with `hexToLinear` once in `prepare`; mix with `mix3`/`set3`/`ramp`. The rasteriser does the sRGB encode.
-5. **Antialias analytically.** Compute a signed distance `d` in **uv units** (divide cell-space distances by the repeat count) and use `coverage(d, ctx.px)`.
-6. **Hot path hygiene.** No allocation in `sample` (reuse module-level scratch arrays), no string work, precompute in `prepare`.
 
-After adding a pattern: register nothing extra (index.js spreads each file's array), then run `npm test` and `npm run catalog`.
+`sample` writes into `out` (Float64Array(5), pre-filled `[0, 0, 0, 1, 0.5]`):
+- `out[0..2]` = **linear** RGB, **premultiplied** by alpha · `out[3]` = alpha · `out[4]` = height 0..1 (0.5 = flat).
+- Colours are 4-vectors from `hexToLinear(str)` (premultiplied). Use `shade(out, c, k)` (rgb × k, alpha copied),
+  `mix(out, a, b, t)` (all 4 channels), `over(out, c, t)`, `ramp(out, stops, t)`. Never write `out[3]` = height (v1 did; v2 is alpha).
+- `ctx = { px, pixel, width, height, ss, tileW, tileH }`. `px` = sub-pixel size in uv (for AA). `pixel` = output pixel in uv (for LOD).
 
-## Layout
-```
-src/index.js              public API + registry
-src/core/hash.js          PCG3D (Jarzynski & Olano 2020), mulberry32, string seeds
-src/core/noise.js         periodic Perlin/value noise, fbm/ridged/turbulence, domain warp, periodic Worley
-src/core/math.js          clamp/mod/smoothstep, SDFs (segment, star, heart), coverage()
-src/core/color.js         sRGB<->linear, hex parsing, ramps, named PALETTES
-src/core/params.js        schema types + resolveParams() (coerces/clamps any input)
-src/core/raster.js        rasterize(): supersampling, sRGB encode, height & normal output
-src/patterns/woven.js     draft-based weaving engine + 12 weaves (tartan threadcount parser, colour-and-weave)
-src/patterns/knit.js      stitch engine (V/purl), stitch library, charts, cables
-src/patterns/textile.js   corduroy, quilted, mesh, sequins, cross-stitch, shibori
-src/patterns/geometric.js stripes … Islamic star (Hankin), terrazzo, halftone, contours, bricks
-src/patterns/organic.js   noise, marble, wood, animal prints, camo, Gray–Scott, Voronoi, leather
-tests/run-tests.mjs       the test suite
-tools/                    quick render, render-all, contact sheets, catalog generator, PNG encoder
-previews/                 rendered swatches, variants, material maps, sheets, timings.json
-```
+Invariants (the suite enforces them):
+1. **Torus domain.** `sample(u, v) == sample(u + k, v + m)` for integers k, m, and the tests call it with u, v outside [0, 1).
+   - Integer repeat counts, even where things alternate (checkers, half-drop, brick): `evenInt()`, `multipleOf()`.
+   - Wrap every cell index before hashing: `hash01(mod(i, n), mod(j, n), seed)`. Unwrapped ids (`floor(Y) * 13.7`) break periodicity.
+   - Noise: only `core/noise.js` with integer frequencies. If you need a frequency like `n × 2.2`, round it to an integer and use the same integer as both the frequency and the period. `BIG` periods are allowed only inside bounded pieces (a plank, a scale), keyed by a wrapped id.
+   - Rotations only via integer lattice vectors (`a*u + b*v` with integer a, b).
+2. **Determinism.** Randomness only from `core/hash.js` / noise keyed by the `seed` param. No `Math.random`, no `sin`-hash.
+3. **Stability.** No throws for any input (params are coerced), no NaN, alpha and height in [0, 1].
+4. **Antialias analytically.** Compute a signed distance `d` in uv (divide cell-space distances by the repeat count) and use `coverage(d, ctx.px)`.
+5. **Level of detail.** Multiply the amplitude of fine detail (fibres, pores, grain) by `detail(periodUV, ctx.pixel)`. For repeated structures (threads, stitches, wales), blend to the average colour when `detail(cellUV * 2, ctx.pixel) < 1`. The LOD test fails if dense patterns moiré when rendered tiny.
+6. **Hot path hygiene.** No allocation in `sample` (module-level scratch arrays, `[0,0,0,0]` colours). Build noise with `noiseField()`/`warpField()` in `prepare`. Passing a fresh options object to `fbm()` per sample is slow.
+7. **Light from the top-left** (`lambert(nx, ny)`, wrap lighting for fabric) so all patterns look like one set.
 
-## Extension points that need no new code
-- **Any weave**: `weave-draft` takes a draft string (`"1100/0110/0011/1001"`) + warp/weft colour orders with counts.
-- **Any tartan**: `tartan` with `preset:'custom'` and a threadcount (`"K4 R24 K24 Y4"`, or `#rrggbb/N` tokens).
-- **Any colourwork**: `fair-isle` / `cross-stitch` take a digit chart (`"0110/1001"`, digits index the palette).
-- **Exported helpers**: `drafts`, `weaveState`, `weaveSample` (woven.js), `STITCHES`, `CHARTS` (knit.js), `grayScott`, `RD_PRESETS` (organic.js) to compose new patterns.
+### Adding a pattern: checklist
+1. Add the object to the right `src/patterns/<category>.js` default export (index.js picks it up).
+2. `node tools/dev.mjs <cat> <id> 384`, then view it, crop-zoom it, and check small sizes (`… 96 '{"cells":64}'`).
+3. Add 1–4 presets to `src/presets.js` (they're validated and rendered by the tests).
+4. `npm test`, `npm run catalog`, `npm run build`, `npm run render && npm run sheets`.
+5. TypeLab picks it up automatically (`tx-<id>`). Rerun the TypeLab verifier if you changed rendering or params.
 
-## Performance notes
-512² with supersample 2 (≈1M samples): median ≈0.4 s in Node, heaviest (marble, animal prints, camo) ≈2–3.5 s; see `previews/timings.json`.
-For interactive UIs: preview with `supersample: 1` at 256² (≈16× cheaper), render finals in a Web Worker,
-and cache results by `id + JSON.stringify(params)`. `reaction-diffusion` cost ∝ grid² × iterations; its simulation is memoised.
+## Design decisions
+
+- Premultiplied linear RGBA internally, straight-alpha sRGB 8-bit out (ImageData/PNG layout), with deterministic per-pixel dither.
+- Supersample default 2 = 4 rotated-grid (RGSS) samples. It beats a 2×2 grid on the near-axis edges textiles are full of.
+- Non-square outputs contain whole square tiles (`autoTiles`), never stretched.
+- Noise lattice hash is a lowbias32 mix (cheap, exact integer maths); PCG3D stays for general hashing. Changing either changes every seeded output, so treat it as a breaking visual change.
+- The weave engine shades each top yarn as a cylinder whose float rises and dives (precomputed float runs from the draft). The knit engine resolves overlapping loop elements by height (max z with depth bias), not by draw order.
+- Presets are data, not code: an app can list and render them without knowing pattern internals.
 
 ## Gotchas
-- Output is square-tile oriented; non-square `width/height` stretches the torus.
-- `honeycomb`/`mesh(hex)` choose a row count so hexes are within a few % of regular on a square tile.
-- Fabric scale is set by `repeats` / `stitchesAcross` (threads/stitches per tile), not by pixel size.
-- Changing hash/noise internals changes every seeded output — treat as a breaking change.
+
+- `honeycomb`, `mesh(hex)`, `islamic-star(6.6.6)` and `grid-paper(isometric)` fit hex rows to a square tile; hexes are within a few % of regular.
+- `reaction-diffusion` runs a simulation in `prepare` (memoised by params). Keep it out of hot UI paths, or render it in a worker.
+- Some param ids are generic (`shape`, `style`, `preset`). TypeLab special-cases a param called `shape`/`motif`/`logo` only when its value is `'Imported'`, which never happens here.
+- After changing schemas, regenerate `src/patterns.d.ts` (`npm run catalog`) or `npm run typecheck` will drift.

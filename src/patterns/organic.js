@@ -364,7 +364,7 @@ const zebra = {
     if (p.style === 'tiger') g -= smoothstep(0.55, 0.75, s.brk(u, v)) * 1.6;
     const d = g / (TAU * p.stripes * 1.2);
     shade(out, s.c[0]);
-    if (p.style === 'tiger') { shade(out, s.tc); mix(out, out, s.c[0], smoothstep(0.55, 0.95, s.fur(u, v))); }
+    if (p.style === 'tiger') { shade(out, s.tc); mix(out, out, s.c[0], 0.55 * smoothstep(0.62, 0.92, s.fur(u, v))); }
     mix(out, out, s.c[1], coverage(-d, ctx.px));
   },
 };

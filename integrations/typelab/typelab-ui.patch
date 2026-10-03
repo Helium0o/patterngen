@@ -1,0 +1,43 @@
+diff --git a/app/index.html b/app/index.html
+index b0bdbee..f31cb3b 100644
+--- a/app/index.html
++++ b/app/index.html
+@@ -33,6 +33,8 @@
+   <script src="js/shapes.js"></script>
+   <script src="js/pattern-tribal-data.js"></script>
+   <script src="js/patterns.js"></script>
++  <script src="js/vendor/texturelib.js"></script>
++  <script src="js/texturelib-typelab.js"></script>
+   <script src="js/gl.js"></script>
+   <script src="js/effects.js"></script>
+   <script src="js/effects2.js"></script>
+diff --git a/app/js/ui/mode-pattern.js b/app/js/ui/mode-pattern.js
+index e854d34..7a81731 100644
+--- a/app/js/ui/mode-pattern.js
++++ b/app/js/ui/mode-pattern.js
+@@ -55,6 +55,7 @@
+           if (!pr) return;
+           const keep = {}; KEEP.forEach((k) => { if (L.p[k] !== undefined) keep[k] = L.p[k]; });
+           L.p = Object.assign(PT().defaults(L.gen).p, pr.p, keep);
++          if (pr.colors && pr.colors.length) L.colors = pr.colors.slice(); // texturelib presets carry their colours
+           TL.commit((simple ? 'Style: ' : 'Preset: ') + pr.name); UI.buildInspector();
+         } }));
+     }
+@@ -100,7 +101,7 @@
+     L.colors.forEach((c, i) => list.append(h('div', { class: 'pcolor', draggable: true,
+       ondragstart: () => (dragI = i), ondragover: (e) => e.preventDefault(),
+       ondrop: (e) => { e.preventDefault(); if (dragI < 0 || dragI === i) return; const [m] = L.colors.splice(dragI, 1); L.colors.splice(i, 0, m); TL.commit('Reorder colors'); UI.buildInspector(); } },
+-    h('span', { class: 'grip' }, '⠿'), h('span', { class: 'dim', style: { width: '30px' } }, i === 0 ? 'bg' : '#' + i),
++    h('span', { class: 'grip' }, '⠿'), h('span', { class: 'dim', style: { width: '30px' }, title: g.colorLabels ? g.colorLabels[i] || '' : '' }, i === 0 ? 'bg' : '#' + i),
+     UI.colorField(c, (v) => { L.colors[i] = v; TL.touch(); }, () => TL.commit('Pattern color')),
+     h('button', { class: 'ib', title: 'Remove', onclick: () => { if (L.colors.length <= 2) return; L.colors.splice(i, 1); TL.commit('Remove color'); UI.buildInspector(); } }, icon('x')))));
+     const ways = Object.keys(PT().COLORWAYS);
+@@ -160,7 +161,7 @@
+   const expO = { px: 1024 };
+   function exportSection(L) {
+     const name = (L.name || 'pattern').replace(/[^\w\-]+/g, '_').replace(/^_+|_+$/g, '') || 'pattern';
+-    const pngTile = async (px) => { const c = U.cloneCanvas(PT().tileCanvas(L, px)); return U.canvasToBlob(c); };
++    const pngTile = async (px) => { const c = U.cloneCanvas(PT().tileCanvasAsync ? await PT().tileCanvasAsync(L, px) : PT().tileCanvas(L, px)); return U.canvasToBlob(c); };
+     return UI.section('Export pattern', h('div', { class: 'stack' },
+       h('div', { class: 'row tight' },
+         UI.btn('Tile .svg', () => U.saveBlob(new Blob([PT().svgTile(L)], { type: 'image/svg+xml' }), name + '-tile.svg', [{ name: 'SVG', extensions: ['svg'] }]), 'sm grow'),

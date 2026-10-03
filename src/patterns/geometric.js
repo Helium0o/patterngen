@@ -747,7 +747,7 @@ const grid = {
       const d = Math.hypot(Math.min(fx, 1 - fx), Math.min(fy, 1 - fy)) / n;
       const ix = Math.round(u * n), iy = Math.round(v * n);
       const major = p.majorEvery > 0 && mod(ix, p.majorEvery) === 0 && mod(iy, p.majorEvery) === 0;
-      mix(out, out, s.c[major ? 2 : 1], coverage(d - (major ? wMaj : w) * 1.6, ctx.px));
+      mix(out, out, s.c[major ? 2 : 1], coverage(d - (major ? wMaj : w) * 2.6, ctx.px));
       return;
     }
     const lineSet = (a, scale) => {

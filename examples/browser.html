@@ -1,20 +1,54 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>texturelib — minimal browser example</title>
-<!-- Serve the repo root (npx serve . / python3 -m http.server) and open /examples/browser.html -->
-<style>body{font:14px system-ui;margin:16px;background:#eee} canvas{width:512px;max-width:100%;background:#fff}</style>
-<select id="pick"></select>
-<canvas id="c" width="512" height="512"></canvas>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>texturelib — ES module example</title>
+<!-- Serve the repo root (npx serve . | python3 -m http.server) and open /examples/browser.html.
+     ES modules + module workers need http(s)://, not file://. -->
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; background: #f1f1f1; color: #222 }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px }
+  canvas { width: 100%; max-width: 900px; display: block; border-radius: 6px; background: #ddd }
+  label { display: inline-flex; gap: 6px; align-items: center }
+</style>
+<div class="row">
+  <select id="pattern"></select> <select id="preset"></select>
+  <label>scale <input id="scale" type="range" min="0.25" max="2" step="0.05" value="0.6"></label>
+  <label>rotate <input id="rot" type="range" min="-45" max="45" step="1" value="0"></label>
+  <span id="status"></span>
+</div>
+<canvas id="c" width="1800" height="700"></canvas>
 <script type="module">
-  import { render, listPatterns } from '../src/index.js';
-  const pick = document.getElementById('pick'), ctx = document.getElementById('c').getContext('2d');
-  for (const p of listPatterns()) pick.add(new Option(`${p.category} / ${p.name}`, p.id));
-  const draw = () => {
-    const tile = render(pick.value, { width: 256, supersample: 2 });       // seamless 256² tile
-    const bmp = new OffscreenCanvas(256, 256);
-    bmp.getContext('2d').putImageData(new ImageData(tile.data, 256, 256), 0, 0);
-    ctx.fillStyle = ctx.createPattern(bmp, 'repeat');                          // tile it 2×2
-    ctx.fillRect(0, 0, 512, 512);
-  };
-  pick.onchange = draw; pick.value = 'houndstooth'; draw();
+  import { listPatterns, listPresets, createRenderer, createPattern } from '../src/browser.js';
+
+  const $ = (id) => document.getElementById(id);
+  const canvas = $('c'), ctx = canvas.getContext('2d');
+  const renderer = createRenderer();             // worker pool (finds ../src/worker.js itself) + cache
+  for (const p of listPatterns()) $('pattern').add(new Option(`${p.category} / ${p.name}`, p.id));
+  $('pattern').value = 'cable-knit';
+
+  function fillPresets() {
+    $('preset').innerHTML = '';
+    $('preset').add(new Option('(defaults)', ''));
+    for (const pr of listPresets($('pattern').value)) $('preset').add(new Option(pr.name, pr.id));
+  }
+
+  async function draw() {
+    const t0 = performance.now();
+    // one seamless 512 px tile, rendered off the main thread; 'slot' cancels a still-running older request
+    const tile = await renderer.render($('pattern').value, { width: 512, preset: $('preset').value || undefined }, { slot: 'main' });
+    const opts = { scale: +$('scale').value, rotation: +$('rot').value };
+    // background: the pattern; foreground: big letters filled with the same pattern, rotated the other way
+    ctx.fillStyle = createPattern(ctx, tile, opts);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '900 330px system-ui, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = createPattern(ctx, tile, { ...opts, rotation: -opts.rotation });
+    ctx.fillText('TEXTURE', 40, canvas.height / 2);
+    $('status').textContent = `${Math.round(performance.now() - t0)} ms · ${renderer.workers} workers · ${renderer.stats.cacheHits} cache hits`;
+  }
+  $('pattern').onchange = () => { fillPresets(); draw().catch(() => {}); };
+  for (const id of ['preset', 'scale', 'rot']) $(id).oninput = () => draw().catch(() => {});
+  fillPresets(); draw();
 </script>
