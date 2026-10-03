@@ -1,4 +1,4 @@
-// Small math helpers shared by every pattern. All pure functions.
+// Small math helpers shared by every pattern. All pure functions, no allocation.
 
 export const TAU = Math.PI * 2;
 export const SQRT3 = Math.sqrt(3);
@@ -21,6 +21,8 @@ export const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) { [a,
 export const lcm = (a, b) => (a && b ? Math.abs(a * b) / gcd(a, b) : 0);
 /** Round to the nearest even integer >= min (checkerboards/half-drops need even counts to tile). */
 export const evenInt = (n, min = 2) => Math.max(min, Math.round(n / 2) * 2);
+/** Round n to the nearest positive multiple of k (k >= 1). */
+export const multipleOf = (n, k) => Math.max(1, Math.round(n / k)) * k;
 
 /**
  * Analytic antialiasing coverage from a signed distance (negative = inside).
@@ -28,8 +30,30 @@ export const evenInt = (n, min = 2) => Math.max(min, Math.round(n / 2) * 2);
  */
 export const coverage = (d, px) => clamp01(0.5 - d / px);
 
+/**
+ * Level-of-detail weight for a periodic detail of period `period` (uv units) rendered with
+ * pixels of size `pixel` (uv units, use ctx.pixel). 1 = fully resolved (period ≥ ~4 px),
+ * 0 = below Nyquist (period ≤ ~1.7 px) — multiply the detail's AMPLITUDE by this and it fades to
+ * its mean instead of aliasing into moiré when a tile is rendered small.
+ */
+export const detail = (period, pixel) => 1 - smoothstep(0.25, 0.6, pixel / period);
+
 /** Triangle wave in [0,1], period 1. */
 export const tri = (x) => Math.abs(fract(x) - 0.5) * 2;
+
+/** Smooth minimum (polynomial, k = blend radius). */
+export const smin = (a, b, k) => {
+  const h = clamp01(0.5 + (0.5 * (b - a)) / k);
+  return lerp(b, a, h) - k * h * (1 - h);
+};
+
+/** Lambert-ish shading of a height-field normal (nx, ny, 1) lit from the top-left. Returns ~[0, 1.25]. */
+const LX = -0.48, LY = -0.58, LZ = 0.66; // normalised light direction (screen space, y down)
+export function lambert(nx, ny) {
+  const inv = 1 / Math.sqrt(nx * nx + ny * ny + 1);
+  const d = (nx * LX + ny * LY + LZ) * inv;
+  return d > 0 ? d / LZ : 0; // 1.0 for a flat surface
+}
 
 /** Distance from point p to segment ab. */
 export function sdSegment(px, py, ax, ay, bx, by) {
@@ -46,6 +70,26 @@ export function sdSegmentH(px, py, ax, ay, bx, by, out) {
   const dx = pax - bax * h, dy = pay - bay * h;
   out[0] = h;
   return Math.sqrt(dx * dx + dy * dy);
+}
+
+/** Signed distance to an axis-aligned box of half-size (bx, by) centred at the origin. */
+export function sdBox(x, y, bx, by) {
+  const dx = Math.abs(x) - bx, dy = Math.abs(y) - by;
+  const ox = dx > 0 ? dx : 0, oy = dy > 0 ? dy : 0;
+  return Math.sqrt(ox * ox + oy * oy) + Math.min(Math.max(dx, dy), 0);
+}
+
+/**
+ * Signed distance to a regular n-gon with circumradius r (Inigo Quilez). An edge faces +y (down
+ * on screen), so odd n (triangle, pentagon) point a vertex up.
+ */
+export function sdPolygon(x, y, r, n) {
+  const an = Math.PI / n, ca = Math.cos(an), sa = Math.sin(an);
+  const bn = mod(Math.atan2(x, y), 2 * an) - an;
+  const len = Math.hypot(x, y);
+  let px = len * Math.cos(bn) - r * ca, py = len * Math.abs(Math.sin(bn)) - r * sa;
+  py += clamp(-py, 0, r * sa);
+  return Math.hypot(px, py) * Math.sign(px);
 }
 
 /** Inigo Quilez 5-point star SDF (y-down screen space; point faces up). r = outer radius, rf = inner ratio. */
