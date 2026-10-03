@@ -58,14 +58,21 @@ export function listPresets(patternId) {
 }
 export const getPreset = (id) => PRESET_BY_ID.get(id);
 
-/** Merge preset params (if any) under the user's params, then validate against the schema. */
+/**
+ * Merge preset params (if any) under the user's params, then validate against the schema.
+ * An unknown preset id (or one belonging to another pattern) is ignored; the result's `preset`
+ * field says which preset was actually applied (null if none), so callers can detect typos.
+ */
 function resolveFor(pat, opts) {
   let input = opts.params || {};
+  let applied = null;
   if (opts.preset) {
     const pr = PRESET_BY_ID.get(opts.preset);
-    if (pr && pr.pattern === pat.id) input = { ...pr.params, ...input };
+    if (pr && pr.pattern === pat.id) { input = { ...pr.params, ...input }; applied = pr.id; }
   }
-  return resolveParams(pat.params, input);
+  const p = resolveParams(pat.params, input);
+  Object.defineProperty(p, '__preset', { value: applied, enumerable: false });
+  return p;
 }
 
 /**
@@ -80,7 +87,8 @@ function resolveFor(pat, opts) {
  *   output          'color' (default) | 'height' | 'normal'
  *   normalStrength, normalFormat ('opengl' | 'directx')   for output 'normal'
  *   tiles           [tilesX, tilesY] repeats inside the image (overrides the automatic choice)
- * @returns {{id, width, height, data: Uint8ClampedArray, params, tiles}}  RGBA, straight alpha, sRGB.
+ * @returns {{id, width, height, data: Uint8ClampedArray, params, tiles, preset}}  RGBA, straight alpha, sRGB.
+ *          `preset` = the preset id actually applied, or null (unknown ids are ignored, not errors).
  */
 export function render(id, opts = {}) {
   const pat = need(id);
@@ -90,7 +98,7 @@ export function render(id, opts = {}) {
   const tiles = opts.tiles || autoTiles(Math.round(width), Math.round(height));
   const state = pat.prepare(p, { width, height, tiles });
   const img = rasterize(width, height, (u, v, out, ctx) => pat.sample(u, v, out, ctx, state), { ...opts, tiles, output: opts.output === 'maps' ? 'color' : opts.output });
-  return { id, ...img, params: p };
+  return { id, ...img, params: p, preset: p.__preset };
 }
 
 /**
@@ -121,7 +129,7 @@ export function renderMaps(id, opts = {}) {
   const tiles = opts.tiles || autoTiles(Math.round(width), Math.round(height));
   const state = pat.prepare(p, { width, height, tiles });
   const img = rasterize(width, height, (u, v, out, ctx) => pat.sample(u, v, out, ctx, state), { ...opts, tiles, output: 'maps' });
-  return { id, ...img, params: p };
+  return { id, ...img, params: p, preset: p.__preset };
 }
 
 /**

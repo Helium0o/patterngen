@@ -1301,7 +1301,7 @@
      "label": "Seed",
      "help": "Same seed + params = identical output, always. Change it for a different random variation."
     },
-    "preset": {
+    "sett": {
      "type": "enum",
      "default": "black-watch",
      "options": [
@@ -1315,7 +1315,8 @@
       "madras-style",
       "custom"
      ],
-     "label": "Sett"
+     "label": "Sett",
+     "help": "A named threadcount, or \"custom\" to use the threadcount below."
     },
     "threadcount": {
      "type": "string",
@@ -4623,10 +4624,10 @@
     "coral",
     "print"
    ],
-   "description": "Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Presets: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.",
+   "description": "Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Regimes: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.",
    "scaleParam": "grid",
    "params": {
-    "preset": {
+    "regime": {
      "type": "enum",
      "default": "coral",
      "options": [
@@ -4638,7 +4639,8 @@
       "holes",
       "custom"
      ],
-     "label": "Preset"
+     "label": "Regime",
+     "help": "Gray–Scott feed/kill pair; \"custom\" uses feed and kill below."
     },
     "feed": {
      "type": "float",
@@ -5094,7 +5096,7 @@
    "pattern": "tartan",
    "name": "Black Watch",
    "params": {
-    "preset": "black-watch"
+    "sett": "black-watch"
    },
    "tags": []
   },
@@ -5103,7 +5105,7 @@
    "pattern": "tartan",
    "name": "Red Stewart-style",
    "params": {
-    "preset": "red-stewart-style",
+    "sett": "red-stewart-style",
     "countScale": 0.6
    },
    "tags": []
@@ -5113,7 +5115,7 @@
    "pattern": "tartan",
    "name": "Buffalo check",
    "params": {
-    "preset": "buffalo-check",
+    "sett": "buffalo-check",
     "countScale": 1,
     "repeats": 2
    },
@@ -5126,7 +5128,7 @@
    "pattern": "tartan",
    "name": "Brushed flannel plaid",
    "params": {
-    "preset": "four-colour",
+    "sett": "four-colour",
     "countScale": 1,
     "fuzz": 0.55
    },
@@ -5139,7 +5141,7 @@
    "pattern": "tartan",
    "name": "Camel check-style",
    "params": {
-    "preset": "camel-check-style",
+    "sett": "camel-check-style",
     "countScale": 1.2
    },
    "tags": []
@@ -5149,7 +5151,7 @@
    "pattern": "tartan",
    "name": "Madras",
    "params": {
-    "preset": "madras-style",
+    "sett": "madras-style",
     "symmetric": false,
     "countScale": 1,
     "yarnGap": 0.1,
@@ -5164,7 +5166,7 @@
    "pattern": "tartan",
    "name": "Custom hex sett",
    "params": {
-    "preset": "custom",
+    "sett": "custom",
     "threadcount": "#2d3047/24 #e0a458/4 #2d3047/8 #93b7be/16",
     "countScale": 1
    },
@@ -6428,7 +6430,7 @@
    "pattern": "reaction-diffusion",
    "name": "Mitosis",
    "params": {
-    "preset": "mitosis",
+    "regime": "mitosis",
     "colors": [
      "#fff8f0",
      "#f08080",
@@ -6442,7 +6444,7 @@
    "pattern": "reaction-diffusion",
    "name": "Turing maze",
    "params": {
-    "preset": "maze",
+    "regime": "maze",
     "colors": [
      "#111111",
      "#eeeeee"
@@ -6455,7 +6457,7 @@
    "pattern": "reaction-diffusion",
    "name": "Worms",
    "params": {
-    "preset": "worms",
+    "regime": "worms",
     "colors": [
      "#14213d",
      "#fca311",

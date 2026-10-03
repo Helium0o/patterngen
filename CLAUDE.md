@@ -15,7 +15,7 @@ seed. Runs unchanged in browsers, Web Workers, Electron and Node ≥ 18.
 ## Commands
 
 ```bash
-npm test                                   # 477 checks (must stay green). --only <id> to test one pattern
+npm test                                   # 478 checks (must stay green). --only <id> to test one pattern
 node tools/dev.mjs <category> <id> [size] '{"param":1}' [--name out]   # one pattern → scratch/<out>.png (+ -h height, -n normal); works mid-edit
 node tools/quick.mjs <id> [size] '{json}' [presetId]                    # via the public API, 2×2 tiled to eyeball seams
 python3 tools/sheet.py scratch/x.png [--crop 128] [--cols 4] a.png b.png  # contact sheet; --crop zooms into detail
@@ -108,5 +108,5 @@ Invariants (the suite enforces them):
 
 - `honeycomb`, `mesh(hex)`, `islamic-star(6.6.6)` and `grid-paper(isometric)` fit hex rows to a square tile; hexes are within a few % of regular.
 - `reaction-diffusion` runs a simulation in `prepare` (memoised by params). Keep it out of hot UI paths, or render it in a worker.
-- Some param ids are generic (`shape`, `style`, `preset`). TypeLab special-cases a param called `shape`/`motif`/`logo` only when its value is `'Imported'`, which never happens here.
+- Never name a param `preset`: it would clash with the `render({ preset })` option (tartan uses `sett`, reaction-diffusion `regime`). TypeLab special-cases params called `shape`/`motif`/`logo` only when their value is `'Imported'`, which never happens here.
 - After changing schemas, regenerate `src/patterns.d.ts` (`npm run catalog`) or `npm run typecheck` will drift.

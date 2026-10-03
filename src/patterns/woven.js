@@ -434,13 +434,13 @@ const tartan = weave({
   description: 'Renders any tartan from a threadcount like "K4 R24 K24 Y4" (letters = colours, numbers = threads). Symmetric setts mirror about the pivots. Woven in 2/2 twill so crossing blocks blend like real cloth; raise "Brushed fuzz" for flannel.',
   params: {
     ...COMMON, repeats: P.int(1, 1, 16, 'Repeats', 'Setts across the tile.'), yarnGap: P.float(0.06, 0, 0.5, 'Yarn gap'),
-    preset: P.enumOf('black-watch', [...Object.keys(TARTAN_PRESETS), 'custom'], 'Sett'),
+    sett: P.enumOf('black-watch', [...Object.keys(TARTAN_PRESETS), 'custom'], 'Sett', 'A named threadcount, or "custom" to use the threadcount below.'),
     threadcount: P.string('K4 R24 K24 Y4', 'Threadcount (when sett = custom)', 'Letters: ' + Object.keys(TARTAN_COLORS).join(' ') + ', or #rrggbb/N'),
     symmetric: P.bool(true, 'Symmetric sett', 'Mirror the threadcount about its pivots (most tartans).'),
     countScale: P.float(0.5, 0.1, 4, 'Thread scale', 'Multiplies every count: smaller = fewer, thicker threads per sett.'),
   },
   prepare: (p) => {
-    const tc = p.preset === 'custom' ? p.threadcount : TARTAN_PRESETS[p.preset];
+    const tc = p.sett === 'custom' ? p.threadcount : TARTAN_PRESETS[p.sett];
     const items = expandSett(parseThreadcount(tc), p.symmetric);
     const seq = [];
     for (const it of items) {

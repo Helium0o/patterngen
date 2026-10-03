@@ -19,18 +19,33 @@ npm start                                                                    # P
 npm run dist                                                                 # rebuild the .exe (electron-builder packages app/**/*)
 ```
 
+- Paths: the verifier lives in **this** repo (`../patterngen/integrations/typelab/`), not in TypeLab.
+  `install.mjs` prints the exact verify command with absolute paths when it finishes.
 - `install.mjs` prints what it did. Exit code 1 means some edit's anchor wasn't found (TypeLab changed).
   That edit is skipped, not half-applied, and the message says what to change by hand. See
   [Manual install](#manual-install).
-- `verify-in-typelab.mjs` needs Playwright and Chromium (`npm i -D playwright && npx playwright install chromium`,
-  or a global install via `NODE_PATH`). It opens `app/index.html` from `file://` like Electron does.
-  Screenshots go to `./typelab-verify/`.
+- The verifier needs Playwright and Chromium. Install them **globally**
+  (`npm i -g playwright && npx playwright install chromium`) and run with `NODE_PATH=$(npm root -g)`,
+  so TypeLab's `package.json` doesn't change. It opens `app/index.html` from `file://` like Electron
+  does, respects your `TEXTURELIB_TYPELAB` config, and writes its screenshot to
+  `<os temp dir>/typelab-verify/`, never into TypeLab.
+- **Can't run `npm start`?** (no Electron or display, e.g. a cloud session): the verifier is the
+  substitute. It loads the same `app/index.html` in Chromium and exercises the real code paths. Ask the
+  user to click through *Pattern → New pattern → Fabrics · woven* and run `npm run dist` on their machine.
 - `dist/` is committed in this repo, so you don't need to build texturelib. If you change texturelib,
   run `npm run build` in this repo, then rerun `install.mjs`.
 
-Commit in TypeLab: `app/js/vendor/texturelib.js`, `app/js/vendor/texturelib.worker.js`,
-`app/js/texturelib-typelab.js`, `app/index.html`, `app/js/ui/mode-pattern.js`. Add a ROADMAP milestone
-(TypeLab's ROADMAP.md asks every milestone to end with a commit).
+**Commit in TypeLab:** `app/js/vendor/texturelib.js`, `app/js/vendor/texturelib.worker.js`,
+`app/js/texturelib-typelab.js`, `app/index.html`, `app/js/ui/mode-pattern.js`. Don't commit
+`package.json` / lockfile changes (none are needed). TypeLab's ROADMAP.md says every milestone ends
+with a commit; a suggested entry and version bump (2.1.1 → **2.2.0** in `package.json`):
+
+```
+- [x] M19 texturelib patterns (v2.2.0): 52 realistic fabric / print / material generators from texturelib
+  (helium0o/patterngen) in 5 new Pattern-workspace groups, 123 presets in the preset picker, colours via the
+  Colors panel, live view rendered on Web Workers with provisional tiles, exact exports, SVG embeds the tile;
+  files app/js/vendor/texturelib*.js + app/js/texturelib-typelab.js; verified with verify-in-typelab.mjs
+```
 
 ## What TypeLab gains
 
@@ -130,17 +145,34 @@ Use this if `install.mjs` reports a missing anchor.
 
 ## Configuration
 
-Set this before `texturelib-typelab.js` loads, e.g. in an inline `<script>` placed just before it:
+Set this before `texturelib-typelab.js` loads, e.g. in an inline `<script>` placed just before its tag
+in `app/index.html`:
 
-```js
-window.TEXTURELIB_TYPELAB = {
-  workers: 3,                                   // background render workers (0 = main thread only)
-  workerUrl: 'js/vendor/texturelib.worker.js',  // default: derived from the texturelib.js script tag
-  include: ['tartan', 'denim', 'knit'],         // only these patterns (default: all 52)
-  exclude: ['grid-paper'],                      // or everything except these
-  categories: { woven: 'Fabrics', knit: 'Fabrics', textile: 'Fabrics', geometric: 'Prints', organic: 'Materials' },
-};
+```html
+<script>window.TEXTURELIB_TYPELAB = { include: ['tartan', 'denim', 'knit', 'velvet', 'marble'], categories: { woven: 'Weaves', knit: 'Knits' } };</script>
+<script src="js/texturelib-typelab.js"></script>
 ```
+
+| option | default | meaning |
+|---|---|---|
+| `workers` | 3 | background render workers (0 = main thread only) |
+| `workerUrl` | derived from the `texturelib.js` script tag | URL of `texturelib.worker.js` |
+| `include` | all 52 | only these patterns. **texturelib ids without the `tx-` prefix** (`'tartan'`, not `'tx-tartan'`); see PATTERNS.md |
+| `exclude` | none | everything except these (same id format) |
+| `categories` | see below | gallery group name per texturelib category. A partial map is **merged** with the defaults. |
+
+| category key (texturelib) | default TypeLab group | patterns |
+|---|---|---|
+| `woven` | Fabrics · woven | 13 |
+| `knit` | Fabrics · knit | 3 |
+| `textile` | Fabrics · surfaces | 8 |
+| `geometric` | Prints · geometric | 15 |
+| `organic` | Materials · organic | 13 |
+
+⚠ Removing a pattern later (via `include`/`exclude` or by dropping the adapter) makes TypeLab **drop
+those layers** when it opens documents that use them (see [Saved documents](#saved-documents)). Decide
+the set before users save files with it, and only ever add patterns afterwards. The verifier adapts to
+`include`/`exclude`.
 
 TypeLab already has vector generators called Houndstooth, Gingham, Plaid, Herringbone, Leopard, Zebra,
 Camo, Polka, Halftone, Stripes, Checker, Chevron, Argyle, Truchet, Terrazzo, Topographic and Voronoi.
@@ -183,6 +215,7 @@ Thumbnails (≤ 192 px) render synchronously at 1 sample per pixel: tens of ms e
 | Generators appear but live view stays blurry | Workers failed to load: check `app/js/vendor/texturelib.worker.js` exists next to `texturelib.js`. Console shows `texturelib worker error`. Set `workers: 0` to confirm the main-thread path works. |
 | Old documents lose `tx-` layers | The adapter wasn't loaded when the file was opened (see [Saved documents](#saved-documents)). |
 | A preset changes params but not colours | The optional `pr.colors` line in `mode-pattern.js` isn't applied. |
+| Verifier: `Playwright not found` | `npm i -g playwright && npx playwright install chromium`, run with `NODE_PATH=$(npm root -g)`. |
 | Need to inspect what a layer renders | In DevTools: `TL.texturelib.paramsFor(TL.cur())`, or render it yourself: `TextureLib.render('tartan', { width: 256, params })`. |
 
 ## Where to look in this repo

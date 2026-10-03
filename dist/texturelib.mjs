@@ -951,13 +951,13 @@ var tartan = weave({
     ...COMMON,
     repeats: P.int(1, 1, 16, "Repeats", "Setts across the tile."),
     yarnGap: P.float(0.06, 0, 0.5, "Yarn gap"),
-    preset: P.enumOf("black-watch", [...Object.keys(TARTAN_PRESETS), "custom"], "Sett"),
+    sett: P.enumOf("black-watch", [...Object.keys(TARTAN_PRESETS), "custom"], "Sett", 'A named threadcount, or "custom" to use the threadcount below.'),
     threadcount: P.string("K4 R24 K24 Y4", "Threadcount (when sett = custom)", "Letters: " + Object.keys(TARTAN_COLORS).join(" ") + ", or #rrggbb/N"),
     symmetric: P.bool(true, "Symmetric sett", "Mirror the threadcount about its pivots (most tartans)."),
     countScale: P.float(0.5, 0.1, 4, "Thread scale", "Multiplies every count: smaller = fewer, thicker threads per sett.")
   },
   prepare: (p) => {
-    const tc = p.preset === "custom" ? p.threadcount : TARTAN_PRESETS[p.preset];
+    const tc = p.sett === "custom" ? p.threadcount : TARTAN_PRESETS[p.sett];
     const items = expandSett(parseThreadcount(tc), p.symmetric);
     const seq = [];
     for (const it of items) {
@@ -2815,10 +2815,10 @@ var reaction = {
   category: "organic",
   scale: "grid",
   tags: ["graphics", "generative", "biological", "coral", "print"],
-  description: "Turing patterns from the Gray\u2013Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Presets: coral, mitosis, maze, spots, worms, holes. Cost \u221D grid\xB2 \xD7 iterations; results are cached.",
+  description: "Turing patterns from the Gray\u2013Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Regimes: coral, mitosis, maze, spots, worms, holes. Cost \u221D grid\xB2 \xD7 iterations; results are cached.",
   features: (p) => [p.grid / 8, p.grid / 8, "features"],
   params: {
-    preset: P.enumOf("coral", Object.keys(RD_PRESETS).concat("custom"), "Preset"),
+    regime: P.enumOf("coral", Object.keys(RD_PRESETS).concat("custom"), "Regime", 'Gray\u2013Scott feed/kill pair; "custom" uses feed and kill below.'),
     feed: adv(P.float(0.0545, 0.01, 0.1, "Feed (custom)")),
     kill: adv(P.float(0.062, 0.04, 0.075, "Kill (custom)")),
     grid: P.int(160, 48, 512, "Simulation grid", "Bigger = more, smaller features per tile (slower)."),
@@ -2827,7 +2827,7 @@ var reaction = {
     seed: P.seed(17)
   },
   prepare: (p) => {
-    const [f, k] = p.preset === "custom" ? [p.feed, p.kill] : RD_PRESETS[p.preset];
+    const [f, k] = p.regime === "custom" ? [p.feed, p.kill] : RD_PRESETS[p.regime];
     return { sim: grayScott(p.grid, f, k, p.iterations, p.seed), ramp: lin3(p.colors) };
   },
   sample(u, v, out, ctx, s) {
@@ -3525,13 +3525,13 @@ var PRESETS = [
   pr("prince-of-wales-brown", "glen-check", "Prince of Wales (brown)", { colors: ["#4a3426", "#e6dccb"], overcheckColor: "#7d2a2a" }),
   pr("gingham-navy", "gingham", "Navy gingham", { colors: ["#1f3a68", "#ffffff"], band: 4, repeats: 6 }),
   pr("gingham-print", "gingham", "Gingham (flat print)", { style: "flat", band: 8, repeats: 4 }, ["print"]),
-  pr("tartan-black-watch", "tartan", "Black Watch", { preset: "black-watch" }),
-  pr("tartan-red-stewart", "tartan", "Red Stewart-style", { preset: "red-stewart-style", countScale: 0.6 }),
-  pr("buffalo-check", "tartan", "Buffalo check", { preset: "buffalo-check", countScale: 1, repeats: 2 }, ["lumberjack"]),
-  pr("flannel-plaid", "tartan", "Brushed flannel plaid", { preset: "four-colour", countScale: 1, fuzz: 0.55 }, ["flannel"]),
-  pr("camel-check", "tartan", "Camel check-style", { preset: "camel-check-style", countScale: 1.2 }),
-  pr("madras", "tartan", "Madras", { preset: "madras-style", symmetric: false, countScale: 1, yarnGap: 0.1, irregularity: 0.5 }, ["summer"]),
-  pr("tartan-custom-hex", "tartan", "Custom hex sett", { preset: "custom", threadcount: "#2d3047/24 #e0a458/4 #2d3047/8 #93b7be/16", countScale: 1 }),
+  pr("tartan-black-watch", "tartan", "Black Watch", { sett: "black-watch" }),
+  pr("tartan-red-stewart", "tartan", "Red Stewart-style", { sett: "red-stewart-style", countScale: 0.6 }),
+  pr("buffalo-check", "tartan", "Buffalo check", { sett: "buffalo-check", countScale: 1, repeats: 2 }, ["lumberjack"]),
+  pr("flannel-plaid", "tartan", "Brushed flannel plaid", { sett: "four-colour", countScale: 1, fuzz: 0.55 }, ["flannel"]),
+  pr("camel-check", "tartan", "Camel check-style", { sett: "camel-check-style", countScale: 1.2 }),
+  pr("madras", "tartan", "Madras", { sett: "madras-style", symmetric: false, countScale: 1, yarnGap: 0.1, irregularity: 0.5 }, ["summer"]),
+  pr("tartan-custom-hex", "tartan", "Custom hex sett", { sett: "custom", threadcount: "#2d3047/24 #e0a458/4 #2d3047/8 #93b7be/16", countScale: 1 }),
   pr("raw-denim", "denim", "Raw selvedge denim", { indigo: "#16264a", wash: 0, irregularity: 0.85, slub: 0.5 }, ["jeans"]),
   pr("stonewash-denim", "denim", "Stonewashed denim", { indigo: "#3a5a8c", wash: 0.85 }, ["jeans"]),
   pr("donegal-grey", "tweed", "Donegal grey", { warp: "#6b6a66", weft: "#8d8a82", neps: 0.55 }),
@@ -3627,9 +3627,9 @@ var PRESETS = [
   pr("camo-desert", "camouflage", "Desert camo", { colors: ["#d8c49a", "#b89b6a", "#8c6d46", "#5a4630"] }),
   pr("camo-tiger-stripe", "camouflage", "Tiger-stripe camo", { style: "tiger-stripe", colors: ["#9c9a6a", "#4d5b33", "#1e2016"] }),
   pr("camo-urban", "camouflage", "Urban camo", { colors: ["#d9d9d9", "#9e9e9e", "#5e5e5e", "#262626"] }),
-  pr("rd-mitosis", "reaction-diffusion", "Mitosis", { preset: "mitosis", colors: ["#fff8f0", "#f08080", "#6b2737"] }),
-  pr("rd-maze", "reaction-diffusion", "Turing maze", { preset: "maze", colors: ["#111111", "#eeeeee"] }),
-  pr("rd-worms", "reaction-diffusion", "Worms", { preset: "worms", colors: ["#14213d", "#fca311", "#e5e5e5"] }),
+  pr("rd-mitosis", "reaction-diffusion", "Mitosis", { regime: "mitosis", colors: ["#fff8f0", "#f08080", "#6b2737"] }),
+  pr("rd-maze", "reaction-diffusion", "Turing maze", { regime: "maze", colors: ["#111111", "#eeeeee"] }),
+  pr("rd-worms", "reaction-diffusion", "Worms", { regime: "worms", colors: ["#14213d", "#fca311", "#e5e5e5"] }),
   pr("cracked-earth", "voronoi-cells", "Cracked earth", { style: "cracked-earth", colors: ["#b5835a", "#a87449", "#c4935f"], edgeColor: "#3b2a1d", edge: 0.06, cells: 7 }),
   pr("cobblestone", "voronoi-cells", "Cobblestones", { style: "cobblestone", colors: ["#8d8d8d", "#7a7a7a", "#a39e93"], edgeColor: "#2b2b2b", cells: 6, edge: 0.12 }),
   pr("black-leather", "leather", "Black leather", { color: "#1d1c1c", sheen: 0.5 }),
@@ -3818,11 +3818,17 @@ function listPresets(patternId) {
 var getPreset = (id) => PRESET_BY_ID.get(id);
 function resolveFor(pat, opts) {
   let input = opts.params || {};
+  let applied = null;
   if (opts.preset) {
     const pr2 = PRESET_BY_ID.get(opts.preset);
-    if (pr2 && pr2.pattern === pat.id) input = { ...pr2.params, ...input };
+    if (pr2 && pr2.pattern === pat.id) {
+      input = { ...pr2.params, ...input };
+      applied = pr2.id;
+    }
   }
-  return resolveParams(pat.params, input);
+  const p = resolveParams(pat.params, input);
+  Object.defineProperty(p, "__preset", { value: applied, enumerable: false });
+  return p;
 }
 function render(id, opts = {}) {
   const pat = need(id);
@@ -3832,7 +3838,7 @@ function render(id, opts = {}) {
   const tiles = opts.tiles || autoTiles(Math.round(width), Math.round(height));
   const state = pat.prepare(p, { width, height, tiles });
   const img = rasterize(width, height, (u, v, out, ctx) => pat.sample(u, v, out, ctx, state), { ...opts, tiles, output: opts.output === "maps" ? "color" : opts.output });
-  return { id, ...img, params: p };
+  return { id, ...img, params: p, preset: p.__preset };
 }
 function renderRegion(id, opts = {}) {
   const pat = need(id);
@@ -3852,7 +3858,7 @@ function renderMaps(id, opts = {}) {
   const tiles = opts.tiles || autoTiles(Math.round(width), Math.round(height));
   const state = pat.prepare(p, { width, height, tiles });
   const img = rasterize(width, height, (u, v, out, ctx) => pat.sample(u, v, out, ctx, state), { ...opts, tiles, output: "maps" });
-  return { id, ...img, params: p };
+  return { id, ...img, params: p, preset: p.__preset };
 }
 function renderArea(id, opts = {}) {
   const tileSize = Math.max(1, Math.round(opts.tileSize ?? 256));

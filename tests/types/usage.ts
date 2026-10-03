@@ -2,9 +2,9 @@
 import { render, renderMaps, listPatterns, listPresets, featureCount, tileSizeFor, createSampler, defaults } from '../../src/index.js';
 import { createPattern, createRenderer, toCanvas } from '../../src/browser.js';
 
-const t = render('tartan', { width: 512, params: { preset: 'buffalo-check', countScale: 1, fuzz: 0.4 } });
+const t = render('tartan', { width: 512, params: { sett: 'buffalo-check', countScale: 1, fuzz: 0.4 } });
 const w: number = t.width; const d: Uint8ClampedArray = t.data;
-const sett: string = t.params.preset;
+const sett: string = t.params.sett;
 render('dots', { preset: 'ditsy-floral', params: { background: 'transparent', shape: 'flower' } });
 // @ts-expect-error unknown pattern id
 render('not-a-pattern');

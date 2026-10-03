@@ -25,6 +25,9 @@ outputs differ from v1 (new hash and noise fields), so treat v1 renders as not r
   lighting cost more (knit ≈0.9 s, leather ≈1.5 s, voronoi ≈1.1 s per 512² tile vs 0.15–0.7 s in v1).
   The worker renderer and LOD keep interactive use smooth.
 - Params: `step` and `advanced` metadata for UIs; colour lists accept comma strings; seeds accept strings.
+- **Renamed params** (they clashed with the library-level `preset` option): tartan `preset` → `sett`,
+  reaction-diffusion `preset` → `regime`. `render()` results now include `preset` (the preset id
+  actually applied, or `null`).
 
 ### Patterns (45 → 52)
 - **Woven** (shared engine): yarns are lit cylinders whose floats rise and dive, with wrap lighting, optional
@@ -56,7 +59,7 @@ outputs differ from v1 (new hash and noise fields), so treat v1 renders as not r
 - TypeScript types incl. generated per-pattern params (`src/patterns.d.ts`).
 - CLI `bin/texturelib.mjs`.
 - **TypeLab adapter** (`integrations/typelab/`), with installer, headless verifier and reference patch.
-- Tests: 331 → 477 checks.
+- Tests: 331 → 478 checks.
 
 ## 1.0.0
 Initial library: 45 patterns, draft-based weaving, knit stitches, periodic noise, tests, previews.

@@ -533,17 +533,17 @@ export function grayScott(G, feed, kill, iters, seed) {
 const reaction = {
   id: 'reaction-diffusion', name: 'Reaction–diffusion (Gray–Scott)', category: 'organic', scale: 'grid',
   tags: ['graphics', 'generative', 'biological', 'coral', 'print'],
-  description: 'Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Presets: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.',
+  description: 'Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Regimes: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.',
   features: (p) => [p.grid / 8, p.grid / 8, 'features'],
   params: {
-    preset: P.enumOf('coral', Object.keys(RD_PRESETS).concat('custom'), 'Preset'),
+    regime: P.enumOf('coral', Object.keys(RD_PRESETS).concat('custom'), 'Regime', 'Gray–Scott feed/kill pair; "custom" uses feed and kill below.'),
     feed: adv(P.float(0.0545, 0.01, 0.1, 'Feed (custom)')), kill: adv(P.float(0.062, 0.04, 0.075, 'Kill (custom)')),
     grid: P.int(160, 48, 512, 'Simulation grid', 'Bigger = more, smaller features per tile (slower).'),
     iterations: adv(P.int(5000, 200, 30000, 'Iterations')),
     colors: P.colors(['#0b132b', '#5bc0be', '#f7f7f2'], 'Colour ramp'), seed: P.seed(17),
   },
   prepare: (p) => {
-    const [f, k] = p.preset === 'custom' ? [p.feed, p.kill] : RD_PRESETS[p.preset];
+    const [f, k] = p.regime === 'custom' ? [p.feed, p.kill] : RD_PRESETS[p.regime];
     return { sim: grayScott(p.grid, f, k, p.iterations, p.seed), ramp: lin(p.colors) };
   },
   sample(u, v, out, ctx, s) {

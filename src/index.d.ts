@@ -65,6 +65,8 @@ export interface Tile<I extends PatternId = PatternId> {
   /** The fully resolved params that were used (defaults filled in, values clamped). */
   params: Required<PatternParams[I]>;
   tiles: [number, number];
+  /** Preset actually applied, or null. Unknown preset ids (or another pattern's) are ignored, not errors. */
+  preset: PresetId | null;
 }
 
 export interface Maps<I extends PatternId = PatternId> {
@@ -73,6 +75,7 @@ export interface Maps<I extends PatternId = PatternId> {
   height: number;
   params: Required<PatternParams[I]>;
   tiles: [number, number];
+  preset: PresetId | null;
   color: Uint8ClampedArray;
   heightMap: Uint8ClampedArray;
   normalMap: Uint8ClampedArray;

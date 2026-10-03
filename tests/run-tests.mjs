@@ -156,6 +156,7 @@ console.log('\nAPI tests');
   ok(presetOk, 'every preset references a real pattern + params, values are valid, and renders ' + presetMsg);
   ok(render('dots', { width: 16, preset: 'ditsy-floral', supersample: 1 }).params.shape === 'flower', 'render({preset}) applies the preset');
   ok(render('dots', { width: 16, preset: 'ditsy-floral', params: { shape: 'star' }, supersample: 1 }).params.shape === 'star', 'explicit params override the preset');
+  ok(render('dots', { width: 8, preset: 'ditsy-floral', supersample: 1 }).preset === 'ditsy-floral' && render('dots', { width: 8, preset: 'madras', supersample: 1 }).preset === null && render('dots', { width: 8, preset: 'nope', supersample: 1 }).preset === null, 'result.preset reports the applied preset; unknown / foreign preset ids are ignored');
 
   const t = render('dots', { width: 64, supersample: 1, params: { background: 'transparent' } });
   let transparent = 0, opaque = 0;
@@ -202,7 +203,7 @@ console.log('\nAPI tests');
   let threw = false;
   try { render('no-such-pattern'); } catch (e) { threw = /unknown pattern/.test(e.message); }
   ok(threw, 'unknown id throws a helpful error');
-  ok(defaults('tartan').preset === 'black-watch', 'defaults()');
+  ok(defaults('tartan').sett === 'black-watch', 'defaults()');
 
   // worker renderer queue logic, with a fake Worker that answers asynchronously like a real one
   const { createRenderer, serveWorker } = await import('../src/browser.js');

@@ -92,7 +92,9 @@ if (!noTweaks) {
 }
 
 console.log(`\nDone${warnings ? ` with ${warnings} warning(s)` : ''}. Next:
-  1. verify:   node ${join('integrations', 'typelab', 'verify-in-typelab.mjs')} ${join(root, 'app', 'index.html')}
-  2. try it:   cd ${root} && npm start   → Pattern workspace → "Fabrics · woven" etc.
-  3. ship:     npm run dist   (electron-builder already packages app/**/*)`);
+  1. verify:   NODE_PATH=$(npm root -g) node ${join(here, 'verify-in-typelab.mjs')} ${join(resolve(root), 'app', 'index.html')}
+               (needs a global Playwright: npm i -g playwright && npx playwright install chromium)
+  2. try it:   cd ${resolve(root)} && npm start   → Pattern workspace → "Fabrics · woven" etc.
+  3. ship:     npm run dist   (electron-builder already packages app/**/*)
+  Commit in TypeLab: app/index.html, app/js/ui/mode-pattern.js, app/js/texturelib-typelab.js, app/js/vendor/texturelib*.js`);
 process.exit(warnings ? 1 : 0);

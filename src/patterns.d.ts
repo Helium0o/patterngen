@@ -287,8 +287,8 @@ export interface PatternParams {
     fuzz?: number;
     /** Seed — Same seed + params = identical output, always. Change it for a different random variation. Default: 1. */
     seed?: number | string;
-    /** Sett Default: "black-watch". */
-    preset?: "black-watch" | "simple-green" | "four-colour" | "buffalo-check" | "red-stewart-style" | "camel-check-style" | "grey-flannel-style" | "madras-style" | "custom";
+    /** Sett — A named threadcount, or "custom" to use the threadcount below. Default: "black-watch". */
+    sett?: "black-watch" | "simple-green" | "four-colour" | "buffalo-check" | "red-stewart-style" | "camel-check-style" | "grey-flannel-style" | "madras-style" | "custom";
     /** Threadcount (when sett = custom) — Letters: K W R DR B DB LB A G DG LG Y N LN P T O C M S CA, or #rrggbb/N Default: "K4 R24 K24 Y4". */
     threadcount?: string;
     /** Symmetric sett — Mirror the threadcount about its pivots (most tartans). Default: true. */
@@ -995,10 +995,10 @@ export interface PatternParams {
     /** Seed — Same seed + params = identical output, always. Change it for a different random variation. Default: 16. */
     seed?: number | string;
   };
-  /** Reaction–diffusion (Gray–Scott) — Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Presets: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached. */
+  /** Reaction–diffusion (Gray–Scott) — Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Regimes: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached. */
   'reaction-diffusion': {
-    /** Preset Default: "coral". */
-    preset?: "coral" | "mitosis" | "maze" | "spots" | "worms" | "holes" | "custom";
+    /** Regime — Gray–Scott feed/kill pair; "custom" uses feed and kill below. Default: "coral". */
+    regime?: "coral" | "mitosis" | "maze" | "spots" | "worms" | "holes" | "custom";
     /** Feed (custom) (0.01–0.1) Default: 0.0545. */
     feed?: number;
     /** Kill (custom) (0.04–0.075) Default: 0.062. */

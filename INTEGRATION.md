@@ -61,7 +61,7 @@ const tile = render('houndstooth', { width: 512, params: { band: 4, colors: ['#1
 |---|---|---|
 | `width`, `height` (or `size`) | 512, = width | Output px. Non-square = whole square tiles, see below. |
 | `params` | `{}` | Pattern params ([PATTERNS.md](PATTERNS.md)). Invalid → clamped or default. |
-| `preset` | | Preset id. Its params are merged under `params`. |
+| `preset` | | Preset id ([PATTERNS.md](PATTERNS.md#presets)). Its params are merged under `params`. An unknown id, or another pattern's, is **ignored** (not an error); `result.preset` tells you which preset was applied (`null` if none). Don't confuse it with ordinary params that pick a variant, such as tartan's `sett` (`'black-watch'`, `'madras-style'`, …) or reaction-diffusion's `regime`. |
 | `supersample` | 2 | 1–4. 2 = 4 rotated-grid samples/px. 1 is ~4× faster for previews. |
 | `output` | `'color'` | `'height'` (grey) or `'normal'` (tangent space). |
 | `normalStrength`, `normalFormat` | 4, `'opengl'` | Normal maps are resolution independent. `'directx'` flips green. |

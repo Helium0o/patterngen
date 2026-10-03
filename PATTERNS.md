@@ -301,7 +301,7 @@ Usage: `render(id, { width, params, preset })` — see README.md / INTEGRATION.m
 | `heather` ⁺ | float | 0 | 0 – 1 | Heather — Mottled multi-tone fibres (marl / melange yarn). |
 | `fuzz` ⁺ | float | 0 | 0 – 1 | Brushed fuzz — Brushed / napped surface that softens the weave (flannel, brushed cotton). |
 | `seed` | seed | 1 |  | Seed — Same seed + params = identical output, always. Change it for a different random variation. |
-| `preset` | enum | black-watch | black-watch \| simple-green \| four-colour \| buffalo-check \| red-stewart-style \| camel-check-style \| grey-flannel-style \| madras-style \| custom | Sett |
+| `sett` | enum | black-watch | black-watch \| simple-green \| four-colour \| buffalo-check \| red-stewart-style \| camel-check-style \| grey-flannel-style \| madras-style \| custom | Sett — A named threadcount, or "custom" to use the threadcount below. |
 | `threadcount` | string | K4 R24 K24 Y4 |  | Threadcount (when sett = custom) — Letters: K W R DR B DB LB A G DG LG Y N LN P T O C M S CA, or #rrggbb/N |
 | `symmetric` | bool | true |  | Symmetric sett — Mirror the threadcount about its pivots (most tartans). |
 | `countScale` | float | 0.5 | 0.1 – 4 | Thread scale — Multiplies every count: smaller = fewer, thicker threads per sett. |
@@ -1234,7 +1234,7 @@ Usage: `render(id, { width, params, preset })` — see README.md / INTEGRATION.m
 
 <img src="previews/reaction-diffusion.jpg" width="160" align="right" alt="reaction-diffusion">
 
-**Reaction–diffusion (Gray–Scott)** — Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Presets: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.
+**Reaction–diffusion (Gray–Scott)** — Turing patterns from the Gray–Scott model on a periodic grid (seamless by construction), sampled with smooth bicubic filtering. Regimes: coral, mitosis, maze, spots, worms, holes. Cost ∝ grid² × iterations; results are cached.
 
 - tags: graphics, generative, biological, coral, print
 - scale: `grid` (default tile holds 20×20 features)
@@ -1243,7 +1243,7 @@ Usage: `render(id, { width, params, preset })` — see README.md / INTEGRATION.m
 
 | param | type | default | range / options | notes |
 |---|---|---|---|---|
-| `preset` | enum | coral | coral \| mitosis \| maze \| spots \| worms \| holes \| custom | Preset |
+| `regime` | enum | coral | coral \| mitosis \| maze \| spots \| worms \| holes \| custom | Regime — Gray–Scott feed/kill pair; "custom" uses feed and kill below. |
 | `feed` ⁺ | float | 0.0545 | 0.01 – 0.1 | Feed (custom) |
 | `kill` ⁺ | float | 0.062 | 0.04 – 0.075 | Kill (custom) |
 | `grid` | int | 160 | 48 – 512 | Simulation grid — Bigger = more, smaller features per tile (slower). |
@@ -1322,13 +1322,13 @@ Usage: `render(id, { width, params, preset })` — see README.md / INTEGRATION.m
 | `prince-of-wales-brown` | `glen-check` | Prince of Wales (brown) | `{"colors":["#4a3426","#e6dccb"],"overcheckColor":"#7d2a2a"}` |
 | `gingham-navy` | `gingham` | Navy gingham | `{"colors":["#1f3a68","#ffffff"],"band":4,"repeats":6}` |
 | `gingham-print` | `gingham` | Gingham (flat print) | `{"style":"flat","band":8,"repeats":4}` |
-| `tartan-black-watch` | `tartan` | Black Watch | `{"preset":"black-watch"}` |
-| `tartan-red-stewart` | `tartan` | Red Stewart-style | `{"preset":"red-stewart-style","countScale":0.6}` |
-| `buffalo-check` | `tartan` | Buffalo check | `{"preset":"buffalo-check","countScale":1,"repeats":2}` |
-| `flannel-plaid` | `tartan` | Brushed flannel plaid | `{"preset":"four-colour","countScale":1,"fuzz":0.55}` |
-| `camel-check` | `tartan` | Camel check-style | `{"preset":"camel-check-style","countScale":1.2}` |
-| `madras` | `tartan` | Madras | `{"preset":"madras-style","symmetric":false,"countScale":1,"yarnGap":0.1,"irregularity":0.5}` |
-| `tartan-custom-hex` | `tartan` | Custom hex sett | `{"preset":"custom","threadcount":"#2d3047/24 #e0a458/4 #2d3047/8 #93b7be/16","countScale":1}` |
+| `tartan-black-watch` | `tartan` | Black Watch | `{"sett":"black-watch"}` |
+| `tartan-red-stewart` | `tartan` | Red Stewart-style | `{"sett":"red-stewart-style","countScale":0.6}` |
+| `buffalo-check` | `tartan` | Buffalo check | `{"sett":"buffalo-check","countScale":1,"repeats":2}` |
+| `flannel-plaid` | `tartan` | Brushed flannel plaid | `{"sett":"four-colour","countScale":1,"fuzz":0.55}` |
+| `camel-check` | `tartan` | Camel check-style | `{"sett":"camel-check-style","countScale":1.2}` |
+| `madras` | `tartan` | Madras | `{"sett":"madras-style","symmetric":false,"countScale":1,"yarnGap":0.1,"irregularity":0.5}` |
+| `tartan-custom-hex` | `tartan` | Custom hex sett | `{"sett":"custom","threadcount":"#2d3047/24 #e0a458/4 #2d3047/8 #93b7be/16","countScale":1}` |
 | `raw-denim` | `denim` | Raw selvedge denim | `{"indigo":"#16264a","wash":0,"irregularity":0.85,"slub":0.5}` |
 | `stonewash-denim` | `denim` | Stonewashed denim | `{"indigo":"#3a5a8c","wash":0.85}` |
 | `donegal-grey` | `tweed` | Donegal grey | `{"warp":"#6b6a66","weft":"#8d8a82","neps":0.55}` |
@@ -1420,9 +1420,9 @@ Usage: `render(id, { width, params, preset })` — see README.md / INTEGRATION.m
 | `camo-desert` | `camouflage` | Desert camo | `{"colors":["#d8c49a","#b89b6a","#8c6d46","#5a4630"]}` |
 | `camo-tiger-stripe` | `camouflage` | Tiger-stripe camo | `{"style":"tiger-stripe","colors":["#9c9a6a","#4d5b33","#1e2016"]}` |
 | `camo-urban` | `camouflage` | Urban camo | `{"colors":["#d9d9d9","#9e9e9e","#5e5e5e","#262626"]}` |
-| `rd-mitosis` | `reaction-diffusion` | Mitosis | `{"preset":"mitosis","colors":["#fff8f0","#f08080","#6b2737"]}` |
-| `rd-maze` | `reaction-diffusion` | Turing maze | `{"preset":"maze","colors":["#111111","#eeeeee"]}` |
-| `rd-worms` | `reaction-diffusion` | Worms | `{"preset":"worms","colors":["#14213d","#fca311","#e5e5e5"]}` |
+| `rd-mitosis` | `reaction-diffusion` | Mitosis | `{"regime":"mitosis","colors":["#fff8f0","#f08080","#6b2737"]}` |
+| `rd-maze` | `reaction-diffusion` | Turing maze | `{"regime":"maze","colors":["#111111","#eeeeee"]}` |
+| `rd-worms` | `reaction-diffusion` | Worms | `{"regime":"worms","colors":["#14213d","#fca311","#e5e5e5"]}` |
 | `cracked-earth` | `voronoi-cells` | Cracked earth | `{"style":"cracked-earth","colors":["#b5835a","#a87449","#c4935f"],"edgeColor":"#3b2a1d","edge":0.06,"cells":7}` |
 | `cobblestone` | `voronoi-cells` | Cobblestones | `{"style":"cobblestone","colors":["#8d8d8d","#7a7a7a","#a39e93"],"edgeColor":"#2b2b2b","cells":6,"edge":0.12}` |
 | `black-leather` | `leather` | Black leather | `{"color":"#1d1c1c","sheen":0.5}` |
