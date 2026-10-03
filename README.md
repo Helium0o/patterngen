@@ -45,7 +45,7 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);                   // fill anyth
 ## Commands
 
 ```bash
-npm test               # 471 checks: exact periodicity, seams, determinism, fuzzing, presets, alpha, LOD, API
+npm test               # 477 checks: exact periodicity, seams, determinism, fuzzing, presets, alpha, LOD, API
 npm run build          # dist/ bundles (esbuild via npx) + gallery.html
 npm run catalog        # PATTERNS.md, patterns.json, src/patterns.d.ts from the code
 npm run render && npm run sheets   # previews/ (needs Pillow for sheets)

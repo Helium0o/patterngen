@@ -15,7 +15,7 @@ seed. Runs unchanged in browsers, Web Workers, Electron and Node ≥ 18.
 ## Commands
 
 ```bash
-npm test                                   # 471 checks (must stay green). --only <id> to test one pattern
+npm test                                   # 477 checks (must stay green). --only <id> to test one pattern
 node tools/dev.mjs <category> <id> [size] '{"param":1}' [--name out]   # one pattern → scratch/<out>.png (+ -h height, -n normal); works mid-edit
 node tools/quick.mjs <id> [size] '{json}' [presetId]                    # via the public API, 2×2 tiled to eyeball seams
 python3 tools/sheet.py scratch/x.png [--crop 128] [--cols 4] a.png b.png  # contact sheet; --crop zooms into detail

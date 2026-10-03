@@ -56,7 +56,7 @@ outputs differ from v1 (new hash and noise fields), so treat v1 renders as not r
 - TypeScript types incl. generated per-pattern params (`src/patterns.d.ts`).
 - CLI `bin/texturelib.mjs`.
 - **TypeLab adapter** (`integrations/typelab/`), with installer, headless verifier and reference patch.
-- Tests: 331 → 471 checks.
+- Tests: 331 → 477 checks.
 
 ## 1.0.0
 Initial library: 45 patterns, draft-based weaving, knit stitches, periodic noise, tests, previews.

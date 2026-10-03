@@ -203,6 +203,37 @@ console.log('\nAPI tests');
   try { render('no-such-pattern'); } catch (e) { threw = /unknown pattern/.test(e.message); }
   ok(threw, 'unknown id throws a helpful error');
   ok(defaults('tartan').preset === 'black-watch', 'defaults()');
+
+  // worker renderer queue logic, with a fake Worker that answers asynchronously like a real one
+  const { createRenderer, serveWorker } = await import('../src/browser.js');
+  const realWorker = globalThis.Worker;
+  globalThis.Worker = class FakeWorker {
+    constructor() { this.scope = { postMessage: (m) => setTimeout(() => this.onmessage && this.onmessage({ data: m }), 1) }; serveWorker(this.scope); }
+    postMessage(msg) { setTimeout(() => this.scope.onmessage({ data: msg }), 1); }
+    terminate() {}
+  };
+  try {
+    const r = createRenderer({ workers: 2, workerUrl: 'fake.worker.js', splitAbove: 1 });
+    const timeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+    const direct = render('stripes', { width: 64, supersample: 1 });
+    const viaWorkers = await timeout(r.render('stripes', { width: 64, supersample: 1 }), 5000);
+    ok(r.workers === 2 && Buffer.compare(Buffer.from(viaWorkers.data.buffer), Buffer.from(direct.data.buffer)) === 0, 'renderer: worker bands reassemble to the exact same pixels');
+    const a = r.render('dots', { width: 96, supersample: 1 }, { slot: 's' });
+    const b = r.render('dots', { width: 96, supersample: 1, params: { cells: 6 } }, { slot: 's' });
+    let aState = 'pending';
+    await timeout(a.then(() => (aState = 'resolved'), (e) => (aState = e.name)), 5000).catch(() => {});
+    ok(aState === 'AbortError', `renderer: a request superseded in its slot rejects with AbortError (got ${aState})`);
+    const bImg = await timeout(b, 5000).catch((e) => e);
+    ok(bImg && bImg.data && bImg.params.cells === 6, 'renderer: the newest request in a slot still resolves');
+    const again = await timeout(r.render('dots', { width: 96, supersample: 1 }, { slot: 's' }), 5000).catch((e) => e);
+    ok(again && again.data, 'renderer: re-requesting the aborted params later renders normally (no stuck job)');
+    const hit = r.peek('dots', { width: 96, supersample: 1 });
+    ok(hit && hit.width === 96, 'renderer: results are cached (peek)');
+    const maps = await timeout(r.renderMaps('bricks', { width: 48, supersample: 1 }), 5000);
+    const mapsDirect = renderMaps('bricks', { width: 48, supersample: 1 });
+    ok(Buffer.compare(Buffer.from(maps.normalMap.buffer), Buffer.from(mapsDirect.normalMap.buffer)) === 0, 'renderer: renderMaps via workers matches renderMaps');
+    r.terminate();
+  } finally { globalThis.Worker = realWorker; }
 }
 
 // ---------- 3. per-pattern ----------

@@ -88,7 +88,8 @@ export function createRenderer(options = {}) {
     for (const slot of pool) {
       if (slot.busy) continue;
       let band;
-      while ((band = queue.shift()) && band.cancelled());
+      // drop bands of cancelled requests, but settle them so the request's Promise.all can reject
+      while ((band = queue.shift()) && band.cancelled()) band.reject(abortError());
       if (!band) return;
       slot.busy = band;
       slot.w.postMessage({ job: band.job, id: band.id, opts: band.opts });
@@ -141,7 +142,8 @@ export function createRenderer(options = {}) {
       const y0 = Math.floor((b * height) / bands), y1 = Math.floor(((b + 1) * height) / bands);
       parts.push(runBand(id, { ...opts, width, height, rows: [y0, y1], output: need, signal: undefined, slot: undefined }, cancelled));
     }
-    const res = await Promise.all(parts);
+    let res;
+    try { res = await Promise.all(parts); } catch (e) { parts.forEach((p) => p.catch(() => {})); throw cancelled() ? abortError() : e; }
     if (cancelled()) throw abortError();
     const first = res[0];
     const color = need !== 'height' ? new Uint8ClampedArray(width * height * 4) : null;
